@@ -7,7 +7,7 @@ function loginWithAuthData(authData) {
 }
 
 function attemptLogin() {
-	var user = root.getAuth();
+	var user = ref.getAuth();
 	if (user) {
 		loginWithAuthData(user);
 	}
@@ -23,3 +23,7 @@ $(document).ready(function () {
 	renderTemplate();
 	anythingElse();
 });
+
+function anythingElse() {
+	// TODO
+}
