@@ -1,11 +1,13 @@
 var express = require('express');
 var router = express.Router();
-<<<<<<< HEAD
-=======
+
+var shortid = require('shortid');
+
+
 var bootstrap = require('bootstrap');
 var shortid = require('shortid');
 
->>>>>>> origin/master
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
 	res.render('index', { title: 'Market Making' });
@@ -23,9 +25,11 @@ router.get('/room/create', function (req, res, next) {
 
 router.get('/rooms/:roomid', function (req, res, next) {
 	res.render('game', {title: 'Game', roomid: res.params.roomid});
+
 });
 router.get('/contact', function (req, res, next){
 	res.render('contact', {title: 'Contact'});
+
 });
 
 module.exports = router;
