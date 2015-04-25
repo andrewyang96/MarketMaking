@@ -45,8 +45,14 @@ router.post('/rooms', function (req, res, next) {
 
 router.get('/rooms/:roomid', function (req, res, next) {
 	console.log("Rendering game. Room ID: " + req.params.roomid);
-	res.render('game', {title: 'Game', roomid: req.params.roomid});
-
+	ref.child("rooms").child(req.params.roomid).once("value", function(snapshot){
+		if (snapshot.exists()){
+			res.render('game', {title: 'Game', roomid: req.params.roomid});
+		}
+		else{
+			res.render("404");
+		}	
+	});
 });
 router.get('/contact', function (req, res, next){
 	res.render('contact', {title: 'Contact'});
