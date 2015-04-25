@@ -16,14 +16,17 @@ router.get('/rooms', function (req, res, next) {
 	var roomType = req.body.type;
 	var numRounds = req.body.numrounds;
 	var roundLength = req.body.roundlength;
+	var minPlayers = req.body.minplayers;
 	var userID = req.body.userID;
-	if (roomName && roomType && numRounds && roundLength) {
+	if (roomName && roomType && numRounds && roundLength && minPlayers) {
+		console.log("valid room creation");
 		var newID = shortid.generate();
 		ref.child("rooms").child(newID).set({
 			roomName: roomName,
 			roomType: roomType,
 			numRounds: numRounds,
 			roundLength: roundLength,
+			minPlayers: minPlayers,
 			startTime: null
 		}, function () {
 			// add to user's hosting list
