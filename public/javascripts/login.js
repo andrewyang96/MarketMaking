@@ -1,5 +1,9 @@
 var ref = new Firebase("https://market-making.firebaseio.com/");
 
+Handlebars.registerHelper("inc", function(value, options) {
+    return parseInt(value) + 1;
+});
+
 function FBLogin() {
 	ref.authWithOAuthPopup("facebook", function(error, authData) {
 		loginWithAuthData(authData);
@@ -67,9 +71,13 @@ function anythingElse() {
 		// initialize handlebars variables
 		var roomTemplate = Handlebars.compile(roomSrc);
 		ref.child("rooms").orderByChild("roomStarted").on("value", function (snapshot) {
-			context = {rooms: snapshot.val()};
+			context = {rooms: snapshot.val(), userID: userID};
 			var renderedRoomTemplate = roomTemplate(context);
 			$("#rooms-view").html(renderedRoomTemplate);
+			// inject userID into hidden inputs
+			$(".userID").each(function (key, val) {
+				val.value = userID;
+			});
 			// transform userIDs to names
 			ref.child("users").once("value", function (usersSnapshot) {
 				var data = usersSnapshot.val();
@@ -110,7 +118,6 @@ function anythingElse() {
 				});
 				// transform roomID into room name
 				ref.child("rooms").child(roomID).once("value", function (roomSnapshot) {
-					console.log(roomSnapshot.val());
 					$("#roomName").html(roomSnapshot.val().roomName);
 				})
 			})

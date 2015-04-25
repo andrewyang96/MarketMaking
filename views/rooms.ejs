@@ -104,7 +104,11 @@
 				<span class="badge count">{{@key}}</span>
 				{{roomName}}<br>
 				Host: <span class="host">{{host}}</span><br>
-				<button type="submit" class="btn btn-sm" action="#">Join</button>
+				<form method="post">
+					<input type="hidden" name="roomID" value={{@key}}>
+					<input type="hidden" name="userID" class="userID" value={{userID}}>
+					<button type="submit" class="btn btn-sm" value="submit" action="#">Join</button>
+				</form>
 			</a>
 			<hr>
 			{{/each}}
