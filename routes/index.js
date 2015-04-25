@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var shortid = require('shortid');
-var firebase = require('firebase');
+var Firebase = require('firebase');
 var ref = new Firebase("https://market-making.firebaseio.com/");
 
 /* GET home page. */
