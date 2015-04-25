@@ -19,7 +19,7 @@ html, body {
 	margin: -10px 10px 5px 10px;
 	font-size: 45px;
 }
-#heading a{
+#heading a, .pull-right a{
 	text-decoration: none;
 }
 .dropdown{
@@ -28,4 +28,14 @@ html, body {
 .nav {
 	font-size: 20px;
 
+}
+.info td{
+	font-size:20px;
+}
+td {
+	max-width: 60px;
+
+}
+button.btn.btn-primary{
+	width:98px;
 }
