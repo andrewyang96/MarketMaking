@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var config = require('./config.json');
 
 var Firebase = require('firebase');
 var ref = new Firebase("https://market-making.firebaseio.com/");
@@ -59,13 +60,22 @@ app.use(function(err, req, res, next) {
   });
 });
 
+// generate server token
+var FirebaseTokenGenerator = require("firebase-token-generator");
+var tokenGenerator = new FirebaseTokenGenerator(config.secretKey);
+var token = tokenGenerator.createToken({uid: "myServer", isServer: true});
 
-
+ref.authWithCustomToken(token, function (err, authData) { // authenticate server
+  if (err) {
+    console.log("Login failed!", err);
+  } else {
+    console.log("Login succeeded!", authData);
+  }
+});
 
 // GLOBAL EVENT HANDLER
 
 var users = ref.child("users");
-
 var members = ref.child("members");
 var events = ref.child("events");
 
@@ -97,11 +107,9 @@ events.on("value", function (snapshot) {
     } else if (val.type === "acceptOffer") {
       // accept offer
     } else if (val.type === "addUser") {
-      console.log("adding user");
       if (val.username && val.avatarURL && val.userID) {
         users.child(val.userID).once("value", function (snapshot) {
           if (!snapshot.exists()) {
-            console.log("creating user");
             users.child(val.userID).set({
               name: val.username,
               avatarURL: val.avatarURL
@@ -110,6 +118,9 @@ events.on("value", function (snapshot) {
         });
       }
     }
+
+    // delete event
+    events.child(key).remove();
   });
 });
 
