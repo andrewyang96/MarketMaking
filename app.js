@@ -59,14 +59,89 @@ app.use(function(err, req, res, next) {
   });
 });
 
+<<<<<<< HEAD
+// event handler
+
+=======
+// GLOBAL EVENT HANDLER
+
+var users = ref.child("users");
+>>>>>>> origin/master
+var members = ref.child("members");
 var events = ref.child("events");
 
 events.on("value", function (snapshot) {
-  var data = snapshot.val();
-  console.log("Data changed!");
   snapshot.forEach(function (child) {
     var key = child.key();
     var val = child.val();
+<<<<<<< HEAD
+    if (val["type"] === "joinRoom") {
+      var roomId = val["roomId"];
+      var userId = val["userId"];
+      if (roomId && userId) {
+        members.child(roomId).child(userId).set(true, function () {
+          // add to user's playing
+        });
+      }
+    } else if (val["type"] === "leaveRoom") {
+      var roomId = val["roomId"];
+      var userId = val["userId"];
+      if (roomId && userId) {
+        members.child(roomId).child(userId).set(null, function () {
+          // delete from user's playing
+        });
+      }
+    } else if (val["type"] === "destroyRoom") {
+      //destroy room
+    } else if (val["type"] === "makeOffer") {
+      //make offer
+    } else if (val["type"] === "acceptOffer") {
+      // accept offer
+    }
+
+
+
+=======
+    if (val.type === "joinRoom") {
+      if (val.roomID && val.userID) {
+        members.child(val.roomID).child(val.userID).set(true, function () {
+          // add to user's playing list
+          users.child(val.userID).child("playing").child(val.roomID).set(true);
+        });
+      }
+    } else if (val.type === "leaveRoom") {
+      if (val.roomID && val.userID) {
+        members.child(val.roomID).child(val.userID).remove(function () {
+          // delete from user's playing list
+          users.child(val.userID).child("playing").child(val.roomID).remove();
+        });
+      }
+    } else if (val.type === "destroyRoom") {
+      if (val.roomID && val.userID) {
+        // check if exists, then delete
+      }
+    } else if (val.type === "makeOffer") {
+      //make offer
+    } else if (val.type === "acceptOffer") {
+      // accept offer
+    } else if (val.type === "addUser") {
+      console.log("adding user");
+      if (val.username && val.avatarURL && val.userID) {
+        users.child(val.userID).once("value", function (snapshot) {
+          if (!snapshot.exists()) {
+            console.log("creating user");
+            users.child(val.userID).set({
+              name: val.username,
+              avatarURL: val.avatarURL
+            });
+          }
+        });
+      }
+    }
+
+
+/*
+>>>>>>> origin/master
     console.log("New key: " + key);
     console.log("New value: " + val["randNum"]);
     console.log("Pushing to users");
@@ -75,7 +150,7 @@ events.on("value", function (snapshot) {
       // remove key-val pair from events
       console.log("Removing key-val pair");
       events.child(key).remove();
-    });
+    });*/
   });
 });
 

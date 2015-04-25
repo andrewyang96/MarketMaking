@@ -5,7 +5,7 @@ html, body {
 .container{
 	max-width: 800px;
 }
-.jumbotron{
+#index{
 	text-align:center;
 }
 #fb-login{
@@ -13,4 +13,7 @@ html, body {
 }
 #heading{
 	margin: 5px 10px;
+}
+.dropdown{
+	margin-left: 10px;
 }

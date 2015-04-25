@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 
 var shortid = require('shortid');
+var Firebase = require('firebase');
+var ref = new Firebase("https://market-making.firebaseio.com/");
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -9,15 +11,55 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/rooms', function (req, res, next) {
-	res.render('rooms', {title: 'Rooms'});
+	var roomName = req.body.name;
+	var roomType = req.body.type;
+	var numRounds = req.body.numrounds;
+	var roundLength = req.body.roundlength;
+	var userID = req.body.userID;
+	if (roomName && roomType && numRounds && roundLength) {
+		var newID = shortid.generate();
+		ref.child("rooms").child(newID).set({
+			roomName: roomName,
+			roomType: roomType,
+			numRounds: numRounds,
+			roundLength: roundLength,
+			startTime: null
+		}, function () {
+			// add to user's hosting list
+			ref.child("users").child(userID).child("hosting").child(newID).set(true, function () {
+				res.redirect("/rooms/" + newID);
+			});
+		});
+	} else {
+		res.render('rooms', {title: 'Rooms'});
+	}
 });
 
+<<<<<<< HEAD
 router.get('/room/create', function (req, res, next) {
-	// other settings
-	var newID = shortid.generate();
-	res.render('newroom', {title: 'Create New Room', newID: newID});
+	var roomName = req.body.name;
+	var roomType = req.body.type;
+	var numRounds = req.body.numrounds;
+	var roundLength = req.body.roundlength;
+	if (roomName && roomType && numRounds && roundLength) {
+		var newID = shortid.generate();
+		ref.child("rooms").child(newID).set({
+			roomName: roomName,
+			roomType: roomType,
+			numRounds: numRounds,
+			roundLength: roundLength,
+			startTime: null
+		}, function () {
+			// add to user's hosting
+			res.redirect("/rooms/" + newID);
+		});
+	} else {
+		res.render('newroom', {title: 'Create New Room'});
+	}
 })
 
+=======
+>>>>>>> origin/master
 router.get('/rooms/:roomid', function (req, res, next) {
 	res.render('game', {title: 'Game', roomid: res.params.roomid});
 
