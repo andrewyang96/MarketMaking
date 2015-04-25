@@ -1,0 +1,25 @@
+{
+  "name": "MarketMaking",
+  "version": "0.0.0",
+  "homepage": "https://github.com/andrewyang96/MarketMaking",
+  "authors": [
+    "Andrew Yang <ayang14@illinois.edu>"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "handlebars": "~3.0.2",
+    "firebase": "~2.2.4",
+    "bootstrap": "~3.3.4",
+    "jquery": "~2.1.3"
+  }
+}

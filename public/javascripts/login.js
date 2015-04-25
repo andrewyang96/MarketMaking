@@ -61,12 +61,34 @@ $(document).ready(function () {
 });
 
 function anythingElse() {
-	var rooms = document.getElementById('rooms'); // indicator for rooms
+	var rooms = $('#rooms'); // indicator for rooms
 	if (rooms) {
+		// initialize handlebars variables
+		var roomSrc = rooms.html();
+		var roomTemplate = Handlebars.compile(roomSrc);
 		ref.child("rooms").orderByChild("roomStarted").on("value", function (snapshot) {
-			var roomID = snapshot.key();
-			var room = snapshot.val();
-			// template stuff
+			context = {rooms: snapshot.val()};
+			var renderedRoomTemplate = roomTemplate(context);
+			$("#rooms-view").html(renderedRoomTemplate);
+			// transform userIDs to names
+			ref.child("users").once("value", function (usersSnapshot) {
+				var data = usersSnapshot.val();
+				$(".host").each(function (key, val) {
+					val.innerHTML = data[val.innerHTML].name;
+				});
+				// count number of players
+				ref.child("members").once("value", function (membersSnapshot) {
+					var memData = membersSnapshot.val();
+					$(".count").each(function (key, val) {
+						if (memData[val.innerHTML]) {
+							val.innerHTML = Object.keys(memData[val.innerHTML]).length;
+						} else {
+							val.innerHTML = 0;
+						}
+					});
+				});
+				
+			});
 		});
 	}
 }

@@ -95,23 +95,22 @@
 		</div>
 		<br>
 		<br>
-
-		<div class="list-group">
-		  <a href="#" class="list-group-item list-group-item-danger">
-			  <span class="badge">1</span>
-			  Room 1<br>
-			  Host:<br>
-			  <button type="submit" class="btn btn-sm">Join</button>
-		  </a>
-		  <a href="#" class="list-group-item list-group-item-danger">
-		  	  <span class="badge">1</span>
-		  	  Room 2<br>
-		  	  Host: <br>
-		  	  <button type="submit" class="btn btn-sm">Join</button>
-		  </a>
-		  
+		
+		<div id="rooms-view">
+			<script id="rooms" type="type/x-handlebars-template">
+			<div class="list-group">
+			{{#each rooms}}
+			<a href="#" class="list-group-item list-group-item-danger">
+				<span class="badge count">{{@key}}</span>
+				{{roomName}}<br>
+				Host: <span class="host">{{host}}</span><br>
+				<button type="submit" class="btn btn-sm" action="#">Join</button>
+			</a>
+			<hr>
+			{{/each}}
+			</div>
+			</script>
 		</div>
-
 
 	</div>
 	
