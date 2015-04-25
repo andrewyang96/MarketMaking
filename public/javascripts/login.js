@@ -1,8 +1,15 @@
 var ref = new Firebase("https://market-making.firebaseio.com/");
 
+function FBLogin() {
+	ref.authWithOAuthPopup("facebook", function(error, authData) {
+		loginWithAuthData(authData);
+	});
+}
+
 function loginWithAuthData(authData) {
 	username = authData.facebook.displayName;
 	avatarUrl = authData.facebook.cachedUserProfile.picture.data.url;
+	userID = authData.facebook.id;
 	renderTemplate();
 }
 
