@@ -5,8 +5,12 @@ html, body {
 .container{
 	max-width: 800px;
 }
-#index{
-	text-align:center;
+#index p{
+	text-align:left
+}
+#index h3{
+	padding:0px;
+
 }
 #fb-login{
 	vertical-align: middle;

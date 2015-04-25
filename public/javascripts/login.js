@@ -40,7 +40,7 @@ function removeLogin() {
 	var login_btn = document.getElementById('login-btn');
 	if (authData && login_btn) {
 		document.getElementById("login-btn").innerHTML = "";
-		document.getElementById("login-af").innerHTML = "Welcome, "+ username;
+		document.getElementById("login-af").innerHTML = "Welcome, "+ username +"<br> <br>";
 	}
 	
 }
@@ -49,6 +49,7 @@ $(document).ready(function () {
 	// attempt login first
 	attemptLogin();
 	anythingElse();
+	removeLogin();
 });
 
 function anythingElse() {

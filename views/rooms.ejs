@@ -16,18 +16,17 @@
 		        <h4 class="modal-title" id="myModalLabel">Create Room</h4>
 		      </div>
 
+		      <form action="#" method="get" id="roomform">
 		      <div class="modal-body">
-		      	<form action="#" method="get" id="roomform"
+		      	
 		        <h5>Name: </h5><input type="text" class="form-control" aria-label="name" name="name">
 		      	
 		      	<br>
-
-		       
 		      	
 				<label for="selectUser">Type:</label>
-			        <select id="selectUser" class="form-control selectWidth">
-			          <option class="">Public</option>
-			          <option class="">Private</option>
+			        <select id="selectUser" name="type" class="form-control selectWidth">
+			          <option value="public">Public</option>
+			          <option value="private">Private</option>
 			          
 			        </select>
 
@@ -36,54 +35,58 @@
 				<h5>Number of Rounds: </h5>
 					<div class="btn-group" data-toggle="buttons">
 					  <label class="btn btn-primary active">
-					    <input type="radio" name="options" id="option1" autocomplete="off" checked> 2 
+					    <input type="radio" name="numrounds" id="numRounds1" autocomplete="off" value= "2"checked> 2 
 					  </label>
 					  <label class="btn btn-primary">
-					    <input type="radio" name="options" id="option2" autocomplete="off"> 4
+					    <input type="radio" name="numrounds" id="numRounds2" autocomplete="off" value="4"> 4
 					  </label>
 					  <label class="btn btn-primary">
-					    <input type="radio" name="options" id="option3" autocomplete="off"> 6
+					    <input type="radio" name="numrounds" id="numRounds3" autocomplete="off" value="6"> 6
 					  </label>
 					  <label class="btn btn-primary">
-					  	<input type="radio" name="options" id="option4" autocomplete="off"> 8
-					  </label>
+					  	<input type="radio" name="numrounds" id="numRounds4"  value="8"> 8
+					  </label> 
 					</div>
+
 				<br>
 
 				<h5> Minimum number of players</h5>
 				  <div class="btn-group" data-toggle="buttons">
 					<label class="btn btn-primary active">
-					    <input type="radio" name="options" id="option1" autocomplete="off" checked id="numplayer"> 3
+					    <input type="radio" name="minplayers" id="minPlayers3" value = "3" autocomplete="off" checked > 3
 					</label>
 					<label class="btn btn-primary ">
-					    <input type="radio" name="options" id="option1" autocomplete="off" checked id="numplayer"> 4
+					    <input type="radio" name="minplayers" id="minPlayers4" autocomplete="off" value ="4" > 4
 					</label>
 					<label class="btn btn-primary ">
-					    <input type="radio" name="options" id="option1" autocomplete="off" checked id="numplayer"> 5
+					    <input type="radio" name="minplayers" id="minPlayers5" autocomplete="off" value="5" > 5
 					</label>
 					<label class="btn btn-primary ">
-					    <input type="radio" name="options" id="option1" autocomplete="off" checked id="numplayer"> 6
+					    <input type="radio" name="minplayers" id="minPlayers6" autocomplete="off" value="6" > 6
 					</label>
 					<label class="btn btn-primary ">
-					    <input type="radio" name="options" id="option1" autocomplete="off" checked id="numplayer"> 7
+					    <input type="radio" name="minplayers" id="minPlayers7" autocomplete="off" value= "7" > 7
 					</label>
 					<label class="btn btn-primary ">
-					    <input type="radio" name="options" id="option1" autocomplete="off" checked id="numplayer"> 8
+					    <input type="radio" name="minplayers" id="minPlayers8" autocomplete="off" value="8" > 8
 					</label>
 					<label class="btn btn-primary ">
-					    <input type="radio" name="options" id="option1" autocomplete="off" checked id="numplayer"> 9
-					</label>
+					    <input type="radio" name="minplayers" id="minPlayers9" autocomplete="off" value="9" > 9
+					</label> 
 				  </div>
-				<br>
-				<br>
-				<h5>Round Length:</h5>
-				<input type="number" name="points" min="30" max="90" step="5" value="30">
-				</form>			
-				</div>
 
-		      	<div class="modal-footer">
+				<br>
+				<br>
+
+				<h5>Round Length:</h5>
+				<input type="number" name="roundlength" min="30" max="90" step="5" value="30">
+						
+			  </div>
+
+		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		        <button type="submit" class="btn btn-primary" form="roomform" values="Submit" action="#">Create</button>
+		        <button type="submit" class="btn btn-primary" form="roomform" value="submit" action="#">Create</button>
+		        </form>	
 		      </div>
 
 		    </div>
