@@ -122,9 +122,13 @@ events.on("value", function (snapshot) {
         });
       }
     } else if (val.type === "makeOffer") {
-      //make offer
+      if (val.buyPrice && val.sellPrice && val.roomID && val.userID) {
+        // check if user is in room
+      }
     } else if (val.type === "acceptOffer") {
-      // accept offer
+      if (val.offerID && val.roomID && val.userID) {
+        // check if offer is still valid and if user in room
+      }
     } else if (val.type === "addUser") {
       if (val.username && val.avatarURL && val.userID) {
         users.child(val.userID).once("value", function (snapshot) {
