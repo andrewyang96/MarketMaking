@@ -8,9 +8,16 @@ function FBLogin() {
 
 function loginWithAuthData(authData) {
 	username = authData.facebook.displayName;
-	avatarUrl = authData.facebook.cachedUserProfile.picture.data.url;
+	avatarURL = authData.facebook.cachedUserProfile.picture.data.url;
 	userID = authData.facebook.id;
-	renderTemplate();
+	ref.child("events").push({
+		type: "addUser",
+		username: username,
+		avatarURL: avatarURL,
+		userID: userID
+	}, function () {
+		renderTemplate();
+	});
 }
 
 function attemptLogin() {

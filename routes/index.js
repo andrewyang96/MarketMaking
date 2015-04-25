@@ -11,14 +11,11 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/rooms', function (req, res, next) {
-	res.render('rooms', {title: 'Rooms'});
-});
-
-router.get('/room/create', function (req, res, next) {
 	var roomName = req.body.name;
 	var roomType = req.body.type;
 	var numRounds = req.body.numrounds;
 	var roundLength = req.body.roundlength;
+	var userID = req.body.userID;
 	if (roomName && roomType && numRounds && roundLength) {
 		var newID = shortid.generate();
 		ref.child("rooms").child(newID).set({
@@ -28,13 +25,15 @@ router.get('/room/create', function (req, res, next) {
 			roundLength: roundLength,
 			startTime: null
 		}, function () {
-			// add to user's hosting
-			res.redirect("/rooms/" + newID);
+			// add to user's hosting list
+			ref.child("users").child(userID).child("hosting").child(newID).set(true, function () {
+				res.redirect("/rooms/" + newID);
+			});
 		});
 	} else {
-		res.render('newroom', {title: 'Create New Room'});
+		res.render('rooms', {title: 'Rooms'});
 	}
-})
+});
 
 router.get('/rooms/:roomid', function (req, res, next) {
 	res.render('game', {title: 'Game', roomid: res.params.roomid});
