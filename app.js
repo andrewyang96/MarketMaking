@@ -59,14 +59,41 @@ app.use(function(err, req, res, next) {
   });
 });
 
+// event handler
+
+var members = ref.child("members");
 var events = ref.child("events");
 
 events.on("value", function (snapshot) {
-  var data = snapshot.val();
-  console.log("Data changed!");
   snapshot.forEach(function (child) {
     var key = child.key();
     var val = child.val();
+    if (val["type"] === "joinRoom") {
+      var roomId = val["roomId"];
+      var userId = val["userId"];
+      if (roomId && userId) {
+        members.child(roomId).child(userId).set(true, function () {
+          // add to user's playing
+        });
+      }
+    } else if (val["type"] === "leaveRoom") {
+      var roomId = val["roomId"];
+      var userId = val["userId"];
+      if (roomId && userId) {
+        members.child(roomId).child(userId).set(null, function () {
+          // delete from user's playing
+        });
+      }
+    } else if (val["type"] === "destroyRoom") {
+      //destroy room
+    } else if (val["type"] === "makeOffer") {
+      //make offer
+    } else if (val["type"] === "acceptOffer") {
+      // accept offer
+    }
+
+
+
     console.log("New key: " + key);
     console.log("New value: " + val["randNum"]);
     console.log("Pushing to users");

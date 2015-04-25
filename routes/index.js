@@ -28,6 +28,7 @@ router.get('/room/create', function (req, res, next) {
 			roundLength: roundLength,
 			startTime: null
 		}, function () {
+			// add to user's hosting
 			res.redirect("/rooms/" + newID);
 		});
 	} else {

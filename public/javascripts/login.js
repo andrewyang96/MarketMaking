@@ -6,8 +6,20 @@ function loginWithAuthData(authData) {
 	renderTemplate();
 }
 
-// attempt login first
-var user = root.getAuth();
-if (user) {
-	loginWithAuthData(user);
+function attemptLogin() {
+	var user = root.getAuth();
+	if (user) {
+		loginWithAuthData(user);
+	}
 }
+
+function renderTemplate() {
+	// TODO
+}
+
+$(document).ready(function () {
+	// attempt login first
+	attemptLogin();
+	renderTemplate();
+	anythingElse();
+});
