@@ -89,19 +89,29 @@ events.on("value", function (snapshot) {
 
     if (val.type === "joinRoom") {
       if (val.roomID && val.userID) {
-        members.child(val.roomID).child(val.userID).set(true, function () {
-          // add to user's playing list
-          users.child(val.userID).child("playing").child(val.roomID).set(true);
+        rooms.child(val.roomID).child("startTime").once("value", function (snapshot) {
+          // can only join if game hasn't started yet
+          if (!snapshot.exists()) {
+            members.child(val.roomID).child(val.userID).set(true, function () {
+              // add to user's playing list
+              users.child(val.userID).child("playing").child(val.roomID).set(true);
+            });
+          }
         });
       }
-    } else if (val.type === "leaveRoom") {
+    } else if (val.type === "leaveRoom") { // UNUSED FOR THIS HACAKTHON
       if (val.roomID && val.userID) {
-        members.child(val.roomID).child(val.userID).remove(function () {
-          // delete from user's playing list
-          users.child(val.userID).child("playing").child(val.roomID).remove();
+        room.child(val.roomID).child("startTime").once("value", function (snapshot) {
+          // can only leave if game hasn't started yet
+          if (!snapshot.exists()) {
+            members.child(val.roomID).child(val.userID).remove(function () {
+              // delete from user's playing list
+              users.child(val.userID).child("playing").child(val.roomID).remove();
+            });
+          }
         });
       }
-    } else if (val.type === "destroyRoom") {
+    } else if (val.type === "destroyRoom") { // UNUSED FOR THIS HACKATHON
       if (val.roomID && val.userID) {
         // check if room exists, then delete
         rooms.child(val.roomID).once("value", function (snapshot) {
@@ -140,6 +150,12 @@ events.on("value", function (snapshot) {
               avatarURL: val.avatarURL
             });
           }
+        });
+      }
+    } else if (val.type === "startGame") {
+      if (val.userID && val.roomID) {
+        rooms.child(val.roomID).child("startTime").set(Firebase.ServerValue.TIMESTAMP, function () {
+          // set interval
         });
       }
     }
