@@ -35,31 +35,8 @@ router.get('/rooms', function (req, res, next) {
 	}
 });
 
-<<<<<<< HEAD
-router.get('/room/create', function (req, res, next) {
-	var roomName = req.body.name;
-	var roomType = req.body.type;
-	var numRounds = req.body.numrounds;
-	var roundLength = req.body.roundlength;
-	if (roomName && roomType && numRounds && roundLength) {
-		var newID = shortid.generate();
-		ref.child("rooms").child(newID).set({
-			roomName: roomName,
-			roomType: roomType,
-			numRounds: numRounds,
-			roundLength: roundLength,
-			startTime: null
-		}, function () {
-			// add to user's hosting
-			res.redirect("/rooms/" + newID);
-		});
-	} else {
-		res.render('newroom', {title: 'Create New Room'});
-	}
-})
 
-=======
->>>>>>> origin/master
+
 router.get('/rooms/:roomid', function (req, res, next) {
 	res.render('game', {title: 'Game', roomid: res.params.roomid});
 

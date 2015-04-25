@@ -8,11 +8,6 @@ function FBLogin() {
 
 function loginWithAuthData(authData) {
 	username = authData.facebook.displayName;
-<<<<<<< HEAD
-	avatarUrl = authData.facebook.cachedUserProfile.picture.data.url;
-	userID = authData.facebook.id;
-	renderTemplate();
-=======
 	avatarURL = authData.facebook.cachedUserProfile.picture.data.url;
 	userID = authData.facebook.id;
 	ref.child("events").push({
@@ -23,7 +18,7 @@ function loginWithAuthData(authData) {
 	}, function () {
 		renderTemplate();
 	});
->>>>>>> origin/master
+
 }
 
 function attemptLogin() {

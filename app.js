@@ -59,14 +59,13 @@ app.use(function(err, req, res, next) {
   });
 });
 
-<<<<<<< HEAD
-// event handler
 
-=======
+
+
 // GLOBAL EVENT HANDLER
 
 var users = ref.child("users");
->>>>>>> origin/master
+
 var members = ref.child("members");
 var events = ref.child("events");
 
@@ -74,34 +73,7 @@ events.on("value", function (snapshot) {
   snapshot.forEach(function (child) {
     var key = child.key();
     var val = child.val();
-<<<<<<< HEAD
-    if (val["type"] === "joinRoom") {
-      var roomId = val["roomId"];
-      var userId = val["userId"];
-      if (roomId && userId) {
-        members.child(roomId).child(userId).set(true, function () {
-          // add to user's playing
-        });
-      }
-    } else if (val["type"] === "leaveRoom") {
-      var roomId = val["roomId"];
-      var userId = val["userId"];
-      if (roomId && userId) {
-        members.child(roomId).child(userId).set(null, function () {
-          // delete from user's playing
-        });
-      }
-    } else if (val["type"] === "destroyRoom") {
-      //destroy room
-    } else if (val["type"] === "makeOffer") {
-      //make offer
-    } else if (val["type"] === "acceptOffer") {
-      // accept offer
-    }
 
-
-
-=======
     if (val.type === "joinRoom") {
       if (val.roomID && val.userID) {
         members.child(val.roomID).child(val.userID).set(true, function () {
@@ -138,19 +110,6 @@ events.on("value", function (snapshot) {
         });
       }
     }
-
-
-/*
->>>>>>> origin/master
-    console.log("New key: " + key);
-    console.log("New value: " + val["randNum"]);
-    console.log("Pushing to users");
-    // push key-val pair to users
-    ref.child("users").child(key).set(val, function () {
-      // remove key-val pair from events
-      console.log("Removing key-val pair");
-      events.child(key).remove();
-    });*/
   });
 });
 
