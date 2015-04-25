@@ -61,5 +61,12 @@ $(document).ready(function () {
 });
 
 function anythingElse() {
-	// TODO
+	var rooms = document.getElementById('rooms'); // indicator for rooms
+	if (rooms) {
+		ref.child("rooms").orderByChild("roomStarted").on("value", function (snapshot) {
+			var roomID = snapshot.key();
+			var room = snapshot.val();
+			// template stuff
+		});
+	}
 }
