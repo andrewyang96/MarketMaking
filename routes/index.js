@@ -16,14 +16,15 @@ router.get('/rooms', function (req, res, next) {
 });
 
 router.post('/rooms', function (req, res, next) {
-	console.log('POST /rooms works!');
 	var roomName = req.body.name;
 	var roomType = req.body.type;
 	var numRounds = req.body.numrounds;
 	var roundLength = req.body.roundlength;
 	var minPlayers = req.body.minplayers;
 	var userID = req.body.userID;
-	if (roomName && roomType && numRounds && roundLength && minPlayers && userID) { // check validity
+	var roomID = req.body.roomID;
+	if (roomName && roomType && numRounds && roundLength && minPlayers && userID) { // check validity for creating new room
+		console.log("Creating new room");
 		var newID = shortid.generate();
 		ref.child("rooms").child(newID).set({
 			roomName: roomName,
@@ -45,7 +46,17 @@ router.post('/rooms', function (req, res, next) {
 				});
 			});
 		});
+	} else if (userID && roomID) { // check validity for joining a room
+		console.log("Joining room " + roomID);
+		ref.child("events").push({
+			type: "joinRoom",
+			userID: userID,
+			roomID: roomID
+		}, function () {
+			res.redirect("/rooms/" + roomID);
+		});
 	} else { // invalid POST
+		console.log("Invalid POST in /room");
 		res.redirect("/rooms");
 	}
 });
