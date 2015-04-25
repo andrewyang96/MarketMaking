@@ -8,6 +8,9 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
+var Firebase = require('firebase');
+var ref = new Firebase("https://market-making.firebaseio.com/");
+
 var app = express();
 
 // view engine setup
@@ -53,6 +56,26 @@ app.use(function(err, req, res, next) {
   res.render('error', {
     message: err.message,
     error: {}
+  });
+});
+
+var events = ref.child("events");
+
+events.on("value", function (snapshot) {
+  var data = snapshot.val();
+  console.log("Data changed!");
+  snapshot.forEach(function (child) {
+    var key = child.key();
+    var val = child.val();
+    console.log("New key: " + key);
+    console.log("New value: " + val["randNum"]);
+    console.log("Pushing to users");
+    // push key-val pair to users
+    ref.child("users").child(key).set(val, function () {
+      // remove key-val pair from events
+      console.log("Removing key-val pair");
+      events.child(key).remove();
+    });
   });
 });
 
