@@ -5,8 +5,8 @@ html, body {
 .container{
 	max-width: 800px;
 }
-#index p{
-	text-align:left
+#index {
+	text-align:middle;
 }
 #index h3{
 	padding:0px;
