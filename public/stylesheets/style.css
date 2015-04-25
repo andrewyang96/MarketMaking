@@ -1,8 +1,9 @@
 html, body {
-  padding: 50px;
+  padding: 30px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
+p {
+  font-size: 20px;
   color: #00B7FF;
 }
