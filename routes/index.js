@@ -24,7 +24,6 @@ router.post('/rooms', function (req, res, next) {
 	var minPlayers = req.body.minplayers;
 	var userID = req.body.userID;
 	if (roomName && roomType && numRounds && roundLength && minPlayers && userID) { // check validity
-		console.log("valid room creation");
 		var newID = shortid.generate();
 		ref.child("rooms").child(newID).set({
 			roomName: roomName,
@@ -36,18 +35,17 @@ router.post('/rooms', function (req, res, next) {
 		}, function () {
 			// add to user's hosting list
 			ref.child("users").child(userID).child("hosting").child(newID).set(true, function () {
-				console.log("New room ID: " + newID);
 				res.redirect("/rooms/" + newID);
 			});
 		});
-	} else {
-		console.log("invalid!");
+	} else { // invalid POST
 		res.redirect("/rooms");
 	}
 });
 
 router.get('/rooms/:roomid', function (req, res, next) {
-	res.render('game', {title: 'Game', roomid: res.params.roomid});
+	console.log("Rendering game. Room ID: " + req.params.roomid);
+	res.render('game', {title: 'Game', roomid: req.params.roomid});
 
 });
 router.get('/contact', function (req, res, next){
