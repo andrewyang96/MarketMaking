@@ -119,8 +119,20 @@ function anythingElse() {
 				// transform roomID into room name
 				ref.child("rooms").child(roomID).once("value", function (roomSnapshot) {
 					$("#roomName").html(roomSnapshot.val().roomName);
+					if (roomSnapshot.val().host){
+						ref.child("events").push({
+							type:"startGame",
+							roomID: roomID,
+							useriD: userID
+					}, function(){
+						//callback function
+					});
 				})
+
+				
+
 			})
+
 		});
 	}
 }

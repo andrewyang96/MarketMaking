@@ -62,10 +62,10 @@ router.post('/rooms', function (req, res, next) {
 });
 
 router.get('/rooms/:roomid', function (req, res, next) {
-
 	console.log("Rendering game. Room ID: " + req.params.roomid);
 	ref.child("rooms").child(req.params.roomid).once("value", function(snapshot){
 		if (snapshot.exists()){
+			console.log(snapshot.exists());
 			res.render('game', {title: 'Game', roomid: req.params.roomid});
 		}
 		else{
