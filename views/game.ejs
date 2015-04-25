@@ -1,28 +1,30 @@
 <% include gamehead.ejs %>
 <% include header.ejs %>
+<div id="game-view">
+
+    <script id="game-area" type="type/x-handlebars-template">
 	<div class="jumbotron">
 		<table class="table" id="room">
-		<h3>Room Name</h3>
-        <thead>
-            <tr>
-                <th>Player</th>
-                <th>Name</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-        	<tr class="danger">
-                <td>1</td>
-                <td>Joe Biden</td>
-                
-            </tr>
-            <tr class="info">
-                <td>2</td>
-                <td>President Obama</td>
-                
-            </tr>
-            
-        </tbody>
-    </table>
+    		<h3 id="roomName">{{roomID}}</h3>
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Name</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {{#each members}}
+                <tr class="info">
+                    <td>2</td>
+                    <td class="users">{{@key}}</td>
+                    
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
 	</div>
+    </script>
+
+</div>
 <% include footer.ejs %>

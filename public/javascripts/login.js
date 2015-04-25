@@ -61,10 +61,10 @@ $(document).ready(function () {
 });
 
 function anythingElse() {
-	var rooms = $('#rooms'); // indicator for rooms
-	if (rooms) {
+	var roomSrc = $('#rooms').html(); // indicator for rooms
+	var gameSrc = $('#game-area').html(); // indicator for game
+	if (roomSrc) {
 		// initialize handlebars variables
-		var roomSrc = rooms.html();
 		var roomTemplate = Handlebars.compile(roomSrc);
 		ref.child("rooms").orderByChild("roomStarted").on("value", function (snapshot) {
 			context = {rooms: snapshot.val()};
@@ -89,6 +89,31 @@ function anythingElse() {
 				});
 				
 			});
+		});
+	}
+	if (gameSrc) {
+		// initialize handlebars variables
+		var gameTemplate = Handlebars.compile(gameSrc);
+		var gameStarted = false;
+		// get room ID from URL
+		var href = window.location.href;
+		var roomID = href.substr(href.lastIndexOf("/") + 1).split("#")[0];
+		ref.child("members").child(roomID).on("value", function (snapshot) {
+			context = {members: snapshot.val(), roomID: roomID};
+			var renderedTemplate = gameTemplate(context);
+			$("#game-view").html(renderedTemplate);
+			// transform userIDs to names
+			ref.child("users").once("value", function (usersSnapshot) {
+				var data = usersSnapshot.val();
+				$(".users").each(function (key, val) {
+					val.innerHTML = data[val.innerHTML].name;
+				});
+				// transform roomID into room name
+				ref.child("rooms").child(roomID).once("value", function (roomSnapshot) {
+					console.log(roomSnapshot.val());
+					$("#roomName").html(roomSnapshot.val().roomName);
+				})
+			})
 		});
 	}
 }
