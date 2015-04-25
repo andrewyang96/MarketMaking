@@ -162,16 +162,13 @@ events.on("value", function (snapshot) {
             var data = snapshot.val();
             var roundLength = data.roundLength;
             var numRounds = data.numRounds;
-            // set timeout
-            setTimeout(function () {
-              events.push({
-                type: "rollDice",
-                roomID: roomID,
-                roundLength: roundLength,
-                numRounds: numRounds,
-                secret: config.secretKey
-              });
-            }, roundLength * 1000);
+            events.push({
+              type: "rollDice",
+              roomID: roomID,
+              roundLength: roundLength,
+              numRounds: numRounds,
+              secret: config.secretKey
+            });
           })
         });
       }
@@ -207,7 +204,8 @@ events.on("value", function (snapshot) {
       }
     } else if (val.type === "endGame") {
       if (val.roomID && val.secret === config.secretKey) {
-        // end game
+        // the presence of a "finished" key means that the game is finished
+        rooms.child(val.roomID).child("finished").set(true);
       }
     }
 
