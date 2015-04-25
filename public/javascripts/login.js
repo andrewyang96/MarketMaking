@@ -36,13 +36,21 @@ function attemptLogin() {
 }
 
 function removeLogin() {
-	var authData=ref.getAuth();
+	var authData = ref.getAuth();
 	var login_btn = document.getElementById('login-btn');
 	if (authData && login_btn) {
 		document.getElementById("login-btn").innerHTML = "";
 		document.getElementById("login-af").innerHTML = "Welcome, "+ username +"<br> <br>";
 	}
-	
+	userIDForm();
+}
+
+function userIDForm() {
+	var authData = ref.getAuth();
+	var userForm = document.getElementById('userID');
+	if (authData && userForm) {
+		document.getElementById("userID").value = authData.facebook.id;
+	}
 }
 
 $(document).ready(function () {

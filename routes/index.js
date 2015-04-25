@@ -12,15 +12,18 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/rooms', function (req, res, next) {
-	
+	res.render('rooms', {title: 'Rooms'});
+});
+
+router.post('/rooms', function (req, res, next) {
+	console.log('POST /rooms works!');
 	var roomName = req.body.name;
 	var roomType = req.body.type;
 	var numRounds = req.body.numrounds;
 	var roundLength = req.body.roundlength;
 	var minPlayers = req.body.minplayers;
 	var userID = req.body.userID;
-	console.log('roomName');
-	if (roomName && roomType && numRounds && roundLength && minPlayers) {
+	if (roomName && roomType && numRounds && roundLength && minPlayers && userID) { // check validity
 		console.log("valid room creation");
 		var newID = shortid.generate();
 		ref.child("rooms").child(newID).set({
@@ -29,20 +32,19 @@ router.get('/rooms', function (req, res, next) {
 			numRounds: numRounds,
 			roundLength: roundLength,
 			minPlayers: minPlayers,
-			startTime: null
+			host: userID
 		}, function () {
 			// add to user's hosting list
 			ref.child("users").child(userID).child("hosting").child(newID).set(true, function () {
-				res.redirect("/rooms/" + newID)
+				console.log("New room ID: " + newID);
+				res.redirect("/rooms/" + newID);
 			});
-		
 		});
 	} else {
-		res.render('rooms', {title: 'Rooms'});
+		console.log("invalid!");
+		res.redirect("/rooms");
 	}
 });
-
-
 
 router.get('/rooms/:roomid', function (req, res, next) {
 	res.render('game', {title: 'Game', roomid: res.params.roomid});
