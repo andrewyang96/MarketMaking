@@ -1,6 +1,16 @@
 html, body {
   padding: 30px;
 }
+
 .container{
 	max-width: 800px;
+}
+.jumbotron{
+	text-align:center;
+}
+#fb-login{
+	vertical-align: middle;
+}
+#heading{
+	margin: 5px 10px;
 }
