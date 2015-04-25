@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var config = require('./config.json');
 
 var Firebase = require('firebase');
 var ref = new Firebase("https://market-making.firebaseio.com/");
@@ -59,13 +60,22 @@ app.use(function(err, req, res, next) {
   });
 });
 
+// generate server token
+var FirebaseTokenGenerator = require("firebase-token-generator");
+var tokenGenerator = new FirebaseTokenGenerator(config.secretKey);
+var token = tokenGenerator.createToken({uid: "myServer", isServer: true});
 
-
+ref.authWithCustomToken(token, function (err, authData) { // authenticate server
+  if (err) {
+    console.log("Login failed!", err);
+  } else {
+    console.log("Login succeeded!", authData);
+  }
+});
 
 // GLOBAL EVENT HANDLER
 
 var users = ref.child("users");
-
 var members = ref.child("members");
 var events = ref.child("events");
 
