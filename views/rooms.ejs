@@ -17,24 +17,19 @@
 		      </div>
 
 		      <div class="modal-body">
-		      
-		        <h5>Name: </h5><input type="text" class="form-control" aria-label="name">
-		      
+		      	<form action="#" method="get" id="roomform"
+		        <h5>Name: </h5><input type="text" class="form-control" aria-label="name" name="name">
+		      	
 		      	<br>
 
-		      
-		      	<h5>Type: </h5>
-					<div class="dropdown">
-					  <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					    Dropdown trigger
-					    <span class="caret"></span>
-					  </button>
-					  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenuDivider">
-					    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Public</a></li>
-					    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Private</a></li>
-					    
-					  </ul>
-					</div>
+		       
+		      	
+				<label for="selectUser">Type:</label>
+			        <select id="selectUser" class="form-control selectWidth">
+			          <option class="">Public</option>
+			          <option class="">Private</option>
+			          
+			        </select>
 
 					<br>
 
@@ -83,14 +78,12 @@
 				<br>
 				<h5>Round Length:</h5>
 				<input type="number" name="points" min="30" max="90" step="5" value="30">
-				
-
-
+				</form>			
 				</div>
 
 		      	<div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		        <button type="button" class="btn btn-primary">Create</button>
+		        <button type="submit" class="btn btn-primary" form="roomform" values="Submit" action="#">Create</button>
 		      </div>
 
 		    </div>
