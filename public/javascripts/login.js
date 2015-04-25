@@ -30,7 +30,8 @@ function attemptLogin() {
 
 function removelogin() {
 	var authData=ref.getAuth();
-	if (authData) {
+	var login_btn = document.getElementById('login-btn');
+	if (authData && login_btn) {
 		document.getElementById("login-btn").innerHTML = "";
 		document.getElementById("login-af").innerHTML = "Welcome, "+ username;
 	}
