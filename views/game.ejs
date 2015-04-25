@@ -5,7 +5,11 @@
     <script id="game-area" type="type/x-handlebars-template">
 	<div class="jumbotron">
 		<table class="table" id="room">
-			<div class="pull-right"><button class="btn btn-warning" ><a href="/rooms">Back</a></button>
+			<div>
+                    	<button class="btn btn-primary">Start</button>
+                    	
+					<div class="pull-right"><a href="/rooms"><button class="btn btn-warning" >Back</button></a>
+					</div>
 			</div>
     		<h3 id="roomName">{{roomID}}</h3>
             <thead>
@@ -19,11 +23,7 @@
                 {{#each members}}
                 <tr class="info">
                     <td>{{inc @index}}</td>
-                    <td class="users">{{@key}}</td>
-                    <td>
-                    	<div class="pull-right">
-                    	<button class="btn btn-primary">Start</button>
-                    	</div>
+                    <td class="users">{{@key}}</td>  	
                 </tr>
                 {{/each}}
             </tbody>
