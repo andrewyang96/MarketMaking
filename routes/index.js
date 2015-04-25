@@ -7,7 +7,8 @@ var ref = new Firebase("https://market-making.firebaseio.com/");
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-	res.render('index', { title: 'Market Making' });
+	var user = ref.getAuth();
+	res.render('index', { title: 'Market Making', authData: user});
 });
 
 router.get('/rooms', function (req, res, next) {

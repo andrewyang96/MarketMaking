@@ -12,7 +12,8 @@ html, body {
 	vertical-align: middle;
 }
 #heading{
-	margin: 5px 10px;
+	margin: -20px 10px 5px 10px;
+	font-size: 45px;
 }
 .dropdown{
 	margin-left: 10px;

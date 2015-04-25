@@ -28,8 +28,8 @@ function attemptLogin() {
 	}
 }
 
-function renderTemplate() {
-	// TODO
+function renderTemplate(req, res, next) {
+	res.render("index", {userID: userID});// TODO
 }
 
 $(document).ready(function () {
