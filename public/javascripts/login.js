@@ -16,7 +16,7 @@ function loginWithAuthData(authData) {
 		avatarURL: avatarURL,
 		userID: userID
 	}, function () {
-		renderTemplate();
+		removelogin();
 	});
 
 }
@@ -28,14 +28,19 @@ function attemptLogin() {
 	}
 }
 
-function renderTemplate(req, res, next) {
-	res.render("index", {userID: userID});// TODO
+function removelogin() {
+	var authData=ref.getAuth();
+	if (authData) {
+		document.getElementById("login-btn").innerHTML = "";
+		document.getElementById("login-af").innerHTML = "Welcome, "+ username;
+	}
+	
 }
 
 $(document).ready(function () {
 	// attempt login first
 	attemptLogin();
-	renderTemplate();
+	removelogin();
 	anythingElse();
 });
 
