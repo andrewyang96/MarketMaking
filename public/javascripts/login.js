@@ -10,14 +10,21 @@ function loginWithAuthData(authData) {
 	username = authData.facebook.displayName;
 	avatarURL = authData.facebook.cachedUserProfile.picture.data.url;
 	userID = authData.facebook.id;
-	ref.child("events").push({
-		type: "addUser",
-		username: username,
-		avatarURL: avatarURL,
-		userID: userID
-	}, function () {
-		removelogin();
-	});
+	ref.child("users").child(userID).once("value", function (snapshot) {
+		if (!snapshot.exists()) { // only add user if it doesn't exist
+			ref.child("events").push({
+				type: "addUser",
+				username: username,
+				avatarURL: avatarURL,
+				userID: userID
+			}, function () {
+				removeLogin();
+			});
+		} else {
+			removeLogin();
+		}
+	})
+	
 
 }
 
@@ -28,7 +35,7 @@ function attemptLogin() {
 	}
 }
 
-function removelogin() {
+function removeLogin() {
 	var authData=ref.getAuth();
 	var login_btn = document.getElementById('login-btn');
 	if (authData && login_btn) {
@@ -41,7 +48,6 @@ function removelogin() {
 $(document).ready(function () {
 	// attempt login first
 	attemptLogin();
-	removelogin();
 	anythingElse();
 });
 
