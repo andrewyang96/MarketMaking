@@ -16,9 +16,16 @@ html, body {
 	vertical-align: middle;
 }
 #heading{
-	margin: -20px 10px 5px 10px;
+	margin: -10px 10px 5px 10px;
 	font-size: 45px;
+}
+#heading a{
+	text-decoration: none;
 }
 .dropdown{
 	margin-left: 10px;
+}
+.nav {
+	font-size: 20px;
+
 }
