@@ -35,7 +35,13 @@ router.post('/rooms', function (req, res, next) {
 		}, function () {
 			// add to user's hosting list
 			ref.child("users").child(userID).child("hosting").child(newID).set(true, function () {
-				res.redirect("/rooms/" + newID);
+				// add to user's playing list
+				ref.child("users").child(userID).child("playing").child(newID).set(true, function () {
+					// add to members
+					ref.child("members").child(newID).child(userID).set(true, function () {
+						res.redirect("/rooms/" + newID);
+					});
+				});
 			});
 		});
 	} else { // invalid POST
@@ -44,6 +50,7 @@ router.post('/rooms', function (req, res, next) {
 });
 
 router.get('/rooms/:roomid', function (req, res, next) {
+
 	console.log("Rendering game. Room ID: " + req.params.roomid);
 	ref.child("rooms").child(req.params.roomid).once("value", function(snapshot){
 		if (snapshot.exists()){
@@ -53,6 +60,9 @@ router.get('/rooms/:roomid', function (req, res, next) {
 			res.render("404");
 		}	
 	});
+
+	res.render('game', {title: 'Game', roomid: req.params.roomid});
+
 });
 router.get('/contact', function (req, res, next){
 	res.render('contact', {title: 'Contact'});

@@ -80,6 +80,7 @@ ref.authWithCustomToken(token, function (err, authData) { // authenticate server
 var users = ref.child("users");
 var members = ref.child("members");
 var events = ref.child("events");
+var rooms = ref.child("rooms");
 
 events.on("value", function (snapshot) {
   snapshot.forEach(function (child) {
@@ -102,7 +103,25 @@ events.on("value", function (snapshot) {
       }
     } else if (val.type === "destroyRoom") {
       if (val.roomID && val.userID) {
-        // check if exists, then delete
+        // check if room exists, then delete
+        rooms.child(val.roomID).once("value", function (snapshot) {
+          var data = snapshot.val();
+          if (snapshot.exists() && data.host === val.userID) {
+            rooms.child(val.roomID).remove();
+            // then delete from host's hosting list
+            users.child(val.userID).child("hosting").child(val.roomID).remove(function () {
+              // then delete from all user's playing list
+              members.child(val.roomID).once("value", function (snapshot) {
+                snapshot.forEach(function (childSnapshot) {
+                  var member = childSnapshot.key();
+                  users.child(member).child("playing").child(val.roomID)
+                });
+                // then delete from members
+                members.child(val.roomID).remove();
+              });
+            });
+          }
+        });
       }
     } else if (val.type === "makeOffer") {
       //make offer
