@@ -33,7 +33,7 @@ router.post('/rooms', function (req, res, next) {
 			roundLength: roundLength,
 			minPlayers: minPlayers,
 			host: userID,
-			roomStarted: Firebase.ServerValue.TIMESTAMP
+			roomStarted: Date.now()
 		}, function () {
 			// add to user's hosting list
 			ref.child("users").child(userID).child("hosting").child(newID).set(true, function () {

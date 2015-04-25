@@ -12,6 +12,9 @@ var config = require('./config.json');
 var Firebase = require('firebase');
 var ref = new Firebase("https://market-making.firebaseio.com/");
 
+var Roll = require('roll');
+var roll = new Roll();
+
 var app = express();
 
 // view engine setup
@@ -154,9 +157,57 @@ events.on("value", function (snapshot) {
       }
     } else if (val.type === "startGame") {
       if (val.userID && val.roomID) {
-        rooms.child(val.roomID).child("startTime").set(Firebase.ServerValue.TIMESTAMP, function () {
-          // set interval
+        rooms.child(val.roomID).child("startTime").set(Date.now(), function () {
+          rooms.child(val.roomID).once("value", function (snapshot) {
+            var data = snapshot.val();
+            var roundLength = data.roundLength;
+            var numRounds = data.numRounds;
+            // set timeout
+            setTimeout(function () {
+              events.push({
+                type: "rollDice",
+                roomID: roomID,
+                roundLength: roundLength,
+                numRounds: numRounds,
+                secret: config.secretKey
+              });
+            }, roundLength * 1000);
+          })
         });
+      }
+    } else if (val.type === "rollDice") {
+      if (val.roomID && val.roundLength && val.numRounds && val.secret === config.secretKey) {
+        var num = roll.roll('d6');
+        console.log("Rolled a " + num);
+        rooms.child(val.roomID).child("diceRolls").push(num, function () {
+          rooms.child(val.roomID).child("diceRolls").once("value", function (snapshot) {
+            var count = Object.key(snapshot.val()).length;
+            // check if there's at least one more round left
+            if (count < val.numRounds) {
+              setTimeout(function () {
+                events.push({
+                  type: "rollDice",
+                  roomID: val.roomID,
+                  roundLength: val.roundLength,
+                  numRounds: val.numRounds,
+                  secret: config.secretKey
+                })
+              }, val.roundLength * 1000);
+            } else { // else terminate game at the next timeout
+              setTimeout(function () {
+                events.push({
+                  type: "endGame",
+                  roomID: val.roomID,
+                  secret: config.secretKey
+                });
+              }, val.roundLength * 1000);
+            }
+          });
+        });
+      }
+    } else if (val.type === "endGame") {
+      if (val.roomID && val.secret === config.secretKey) {
+        // end game
       }
     }
 
