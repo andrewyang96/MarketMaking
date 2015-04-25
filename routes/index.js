@@ -3,9 +3,6 @@ var router = express.Router();
 
 var shortid = require('shortid');
 
-var shortid = require('shortid');
-
-
 /* GET home page. */
 router.get('/', function (req, res, next) {
 	res.render('index', { title: 'Market Making' });
