@@ -53,25 +53,25 @@
 				<h5> Minimum number of players</h5>
 				  <div class="btn-group" data-toggle="buttons">
 					<label class="btn btn-primary active">
-					    <input type="radio" name="minplayers" id="minPlayers3" value = "3" autocomplete="off" checked > 3
+					    <input type="radio" name="minplayers" id="minPlayers3" value = "6" autocomplete="off" checked > 6 
 					</label>
 					<label class="btn btn-primary ">
-					    <input type="radio" name="minplayers" id="minPlayers4" autocomplete="off" value ="4" > 4
+					    <input type="radio" name="minplayers" id="minPlayers4" autocomplete="off" value ="7" > 7 
 					</label>
 					<label class="btn btn-primary ">
-					    <input type="radio" name="minplayers" id="minPlayers5" autocomplete="off" value="5" > 5
+					    <input type="radio" name="minplayers" id="minPlayers5" autocomplete="off" value="8" > 8 
 					</label>
 					<label class="btn btn-primary ">
-					    <input type="radio" name="minplayers" id="minPlayers6" autocomplete="off" value="6" > 6
+					    <input type="radio" name="minplayers" id="minPlayers6" autocomplete="off" value="9" > 9
 					</label>
 					<label class="btn btn-primary ">
-					    <input type="radio" name="minplayers" id="minPlayers7" autocomplete="off" value= "7" > 7
+					    <input type="radio" name="minplayers" id="minPlayers7" autocomplete="off" value= "10" > 10
 					</label>
 					<label class="btn btn-primary ">
-					    <input type="radio" name="minplayers" id="minPlayers8" autocomplete="off" value="8" > 8
+					    <input type="radio" name="minplayers" id="minPlayers8" autocomplete="off" value="11" > 11
 					</label>
 					<label class="btn btn-primary ">
-					    <input type="radio" name="minplayers" id="minPlayers9" autocomplete="off" value="9" > 9
+					    <input type="radio" name="minplayers" id="minPlayers9" autocomplete="off" value="12" > 12
 					</label> 
 				  </div>
 
@@ -100,9 +100,9 @@
 			<script id="rooms" type="type/x-handlebars-template">
 			<div class="list-group">
 			{{#each rooms}}
-			<a href="#" class="list-group-item list-group-item-danger">
+			<a href="#" class="list-group-item list-group-item-info">
 				<span class="badge count">{{@key}}</span>
-				{{roomName}}<br>
+				<h3>{{roomName}}</h3><br>
 				Host: <span class="host">{{host}}</span><br>
 				<form method="post">
 					<input type="hidden" name="roomID" value={{@key}}>
