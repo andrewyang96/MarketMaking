@@ -3,8 +3,6 @@ var router = express.Router();
 
 var shortid = require('shortid');
 
-
-var bootstrap = require('bootstrap');
 var shortid = require('shortid');
 
 
