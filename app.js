@@ -97,11 +97,9 @@ events.on("value", function (snapshot) {
     } else if (val.type === "acceptOffer") {
       // accept offer
     } else if (val.type === "addUser") {
-      console.log("adding user");
       if (val.username && val.avatarURL && val.userID) {
         users.child(val.userID).once("value", function (snapshot) {
           if (!snapshot.exists()) {
-            console.log("creating user");
             users.child(val.userID).set({
               name: val.username,
               avatarURL: val.avatarURL
@@ -110,6 +108,9 @@ events.on("value", function (snapshot) {
         });
       }
     }
+
+    // delete event
+    events.child(key).remove();
   });
 });
 
