@@ -102,12 +102,12 @@
 			{{#each rooms}}
 			<a href="#" class="list-group-item list-group-item-info">
 				<span class="badge count">{{@key}}</span>
-				<h3>{{roomName}}</h3><br>
-				Host: <span class="host">{{host}}</span><br>
+				<h2>{{roomName}}</h2><br>
+				<h4>Host: <span class="host">{{host}}</span></h4><br>
 				<form method="post">
 					<input type="hidden" name="roomID" value={{@key}}>
 					<input type="hidden" name="userID" class="userID" value={{userID}}>
-					<button type="submit" class="btn btn-sm" value="submit" action="#">Join</button>
+					<button type="submit" class="btn btn-primary btn- pull-right" value="submit" action="#">Join</button>
 				</form>
 			</a>
 			<hr>
