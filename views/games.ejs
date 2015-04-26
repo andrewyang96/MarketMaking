@@ -1,6 +1,6 @@
 <% include head.ejs %>
 <% include header.ejs %>
-	<div class="jumbotron">
+	<div class="jumbotron container">
 		<div id="trade-container">
 
 		<script id="trade-area" type="type/x-handlebars-template">
@@ -13,38 +13,41 @@
 		<br><br><br><br><br>
 
 		<!-- Make offers here -->
-		<form class="form-inline">
-		  <div class="form-group">  
-		    <div class="input-group"> 
-		    	<input type="number" min="0" max="50" class="form-control" id="buyPrice" placeholder="Buy">
-		    	<input type="number" min="0" max="50" class="form-control" id="sellPrice" placeholder="Sell">
-		    	<input type="hidden" id="roomID" value="{{roomID}}">
-		    </div>
-		  </div>
-	  	  <button type="button" class="btn btn-primary" id="trade">Make Offer</button>
-		</form>
-		
-		<ul>
-		{{#each activeTrades}}
-			<li>{{initiator}}: {{buyPrice}} - {{sellPrice}} (ID: {{@key}})</li>
-		{{/each}}
-		</ul>
-
 		<div class="row">
-		  	<div class="col-md-8 col-md-push-4 frow">Buy</div>
-		  	<div class="col-md-4 col-md-pull-0 frow">Sell</div>
-		  	<br>
-		  	<button type="button" class="b_buy">
-		  		<div id="buy" class="buy_p">2</div>
-		  		<div id="buy" class="buy_p">2</div>
-		  		<div id="buy" class="buy_p">2</div>
-		  		<div id="sell" class="sell_p">4</div>
-		  		<div id="sell" class="sell_p">4</div>
-		  		<div id="sell" class="sell_p">4</div>
-		  	</button>
-		  	<button type="button" class="b_sell">
+			<form class="form-inline col-xs-6">
+			  <div class="form-group">  
+			    <div class="input-group"> 
+			    	<input type="number" min="0" max="50" class="form-control" id="buyPrice" placeholder="Buy">
+			    	<input type="number" min="0" max="50" class="form-control" id="sellPrice" placeholder="Sell">
+			    	<input type="hidden" id="roomID" value="{{roomID}}">
+			    </div>
+			  </div>
+		  	  <button type="button" class="btn btn-primary" id="trade">Make Offer</button>
+			</form>
 
-		  	</button>
+			<!-- Position -->
+			<div class="col-xs-6 pull-right text-center" id="position">
+			Position: {{position}}
+			</div>
+		</div>
+
+		<br>
+
+		<div class="col-xs-6 pull-left">
+			<h3 class="row-fluid text-center">Sell for</h3>
+			{{#each activeTrades}}
+			<div class="row-fluid trade" onclick="acceptOffer('{{@key}}', '{{../roomID}}', userID, 'sell');">
+			{{buyPrice}}
+			</div>
+			{{/each}}
+		</div>
+		<div class="col-xs-6 pull-right">
+			<h3 class="row-fluid text-center">Buy for</h3>
+			{{#each activeTrades}}
+			<div class="row-fluid trade" onclick="acceptOffer('{{@key}}', '{{../roomID}}', userID, 'buy');">
+			{{sellPrice}}
+			</div>
+			{{/each}}
 		</div>
 
 		</script>

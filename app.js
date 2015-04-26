@@ -162,38 +162,48 @@ events.on("value", function (snapshot) {
             activeTrades.child(val.roomID).child(val.offerID).once("value", function (offerSnap) {
               if (offerSnap.exists()) {
                 // process offer for both parties
-                var initiator = offerSnap.val().initiator
-                if (val.buyOrSell === "buy") { // acceptor chooses to buy, initiator sells
-                  var initRef = tradeHistory.child(val.roomID).child(initiator).child("sells");
-                  var userRef = tradeHistory.child(val.roomID).child(val.userID).child("buys");
-                  var price = offerSnap.val().sellPrice;
-                  console.log(initiator + " sells to " + val.userID + " for price " + price);
-                  initRef.push({
-                    partner: val.userID,
-                    price: price
-                  }, function () {
-                    userRef.push({
-                      partner: initiator,
+                var initiator = offerSnap.val().initiator;
+                // prevent a person from buying off of himself
+                if (true) {
+                  activeTrades.child(val.roomID).child(val.offerID).remove();
+                  if (val.buyOrSell === "buy") { // acceptor chooses to buy, initiator sells
+                    var initRef = tradeHistory.child(val.roomID).child(initiator).child("sells");
+                    var userRef = tradeHistory.child(val.roomID).child(val.userID).child("buys");
+                    var price = offerSnap.val().sellPrice;
+                    console.log(initiator + " sells to " + val.userID + " for price " + price);
+                    initRef.push({
+                      partner: val.userID,
                       price: price
+                    }, function () {
+                      userRef.push({
+                        partner: initiator,
+                        price: price
+                      });
                     });
-                  });
-                } else { // acceptor chooses to sell, initiator buys
-                  var initRef = tradeHistory.child(val.roomID).child(initiator).child("buys");
-                  var userRef = tradeHistory.child(val.roomID).child(val.userID).child("sells");
-                  var price = offerSnap.val().buyPrice;
-                  console.log(initiator + " buys from " + val.userID + " for price " + price);
-                  initRef.push({
-                    partner: val.userID,
-                    price: price
-                  }, function () {
-                    userRef.push({
-                      partner: initiator,
+                  } else { // acceptor chooses to sell, initiator buys
+                    var initRef = tradeHistory.child(val.roomID).child(initiator).child("buys");
+                    var userRef = tradeHistory.child(val.roomID).child(val.userID).child("sells");
+                    var price = offerSnap.val().buyPrice;
+                    console.log(initiator + " buys from " + val.userID + " for price " + price);
+                    initRef.push({
+                      partner: val.userID,
                       price: price
+                    }, function () {
+                      userRef.push({
+                        partner: initiator,
+                        price: price
+                      });
                     });
-                  });
+                  }
+                } else {
+                  console.log("Can't buy from yourself");
                 }
+              } else {
+                console.log("Offer doesn't exist anymore");
               }
             });
+          } else {
+            console.log("User is not a member of the room");
           }
         });
       }

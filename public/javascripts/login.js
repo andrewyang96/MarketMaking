@@ -85,6 +85,42 @@ function anythingElse() {
 	var roomSrc = $('#rooms').html(); // indicator for rooms
 	var gameSrc = $('#game-area').html(); // indicator for waiting list
 	var tradeSrc = $('#trade-area').html(); // indicator for trading game
+	var time = $('#time').html();
+	if(time){
+		function startTimer(duration, display) {
+    	var start = Date.now(),
+        diff,
+        seconds;
+    	function timer() {
+        // get the number of seconds that have elapsed since 
+        // startTimer() was called
+        diff = duration - (((Date.now() - start) / 1000) | 0);
+
+        // does the same job as parseInt truncates the float
+        
+        seconds = (diff % 60) | 0;
+
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        // display.textContent = seconds; 
+
+	        if (diff <= 0) {
+	            // add one second so that the count down starts at the full duration
+	            // example 05:00 not 04:59
+	            start = Date.now() + 200;
+	        }
+		    };
+		    // we don't want to wait a full second before the timer starts
+		    timer();
+			    setInterval(timer, 200);
+			}
+
+			window.onload = function () {
+			    var fiveMinutes = 60,
+			        display = document.querySelector('#time');
+			    startTimer(fiveMinutes, display);
+			};
+		}
 	if (roomSrc) {
 		// initialize handlebars variables
 		var roomTemplate = Handlebars.compile(roomSrc);
@@ -113,7 +149,6 @@ function anythingElse() {
 						}
 					});
 				});
-				
 			});
 		});
 	}
@@ -147,14 +182,31 @@ function anythingElse() {
 		var roomID = href.substr(href.lastIndexOf("/") + 1).split("#")[0].split("?")[0];
 		// setup listeners
 		ref.child("activeTrades").child(roomID).on("value", function (snapshot) {
-			var context = {activeTrades: snapshot.val(), roomID: roomID};
-			var renderedTemplate = template(context);
-			$("#trade-container").html(renderedTemplate);
-			console.log("Setting up listeners");
-			setupListeners();
-			// transform roomID into room name
-			ref.child("rooms").child(roomID).once("value", function (roomSnapshot) {
-				$("#roomName").html(roomSnapshot.val().roomName);
+			// calculate position
+			ref.child("tradeHistory").child(roomID).child(userID).once("value", function (histSnap) {
+				var position = 0;
+				if (histSnap.exists()) {
+					var buys = histSnap.val().buys;
+					var sells = histSnap.val().sells;
+					var numBuys = 0;
+					var numSells = 0;
+					if (buys) {
+						numBuys = Object.keys(buys).length;
+					}
+					if (sells) {
+						numSells = Object.keys(sells).length;
+					}
+					position = numBuys - numSells;
+				}
+				var context = {activeTrades: snapshot.val(), roomID: roomID, position: position};
+				var renderedTemplate = template(context);
+				$("#trade-container").html(renderedTemplate);
+				console.log("Setting up listeners");
+				setupListeners();
+				// transform roomID into room name
+				ref.child("rooms").child(roomID).once("value", function (roomSnapshot) {
+					$("#roomName").html(roomSnapshot.val().roomName);
+				});
 			});
 		});
 	}
@@ -188,5 +240,15 @@ function setupListeners() {
 				userID: userID
 			});
 		}
+	});
+}
+
+function acceptOffer(offerID, roomID, userID, buyOrSell) {
+	ref.child("events").push({
+		type: "acceptOffer",
+		offerID: offerID,
+		roomID: roomID,
+		userID: userID,
+		buyOrSell: buyOrSell
 	});
 }
