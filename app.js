@@ -84,6 +84,8 @@ var users = ref.child("users");
 var members = ref.child("members");
 var events = ref.child("events");
 var rooms = ref.child("rooms");
+var activeTrades = ref.child("activeTrades");
+var tradeHistory = ref.child("tradeHistory");
 
 events.on("value", function (snapshot) {
   snapshot.forEach(function (child) {
@@ -139,10 +141,60 @@ events.on("value", function (snapshot) {
     } else if (val.type === "makeOffer") {
       if (val.buyPrice && val.sellPrice && val.roomID && val.userID) {
         // check if user is in room
+        members.child(val.roomID).child(val.userID).once("value", function (userSnap) {
+          if (userSnap.exists()) {
+            // push to activeTrades
+            activeTrades.child(val.roomID).push({
+              buyPrice: val.buyPrice,
+              sellPrice: val.sellPrice,
+              initiator: val.userID
+            });
+          }
+        })
       }
     } else if (val.type === "acceptOffer") {
-      if (val.offerID && val.roomID && val.userID) {
-        // check if offer is still valid and if user in room
+      if (val.offerID && val.roomID && val.userID && (val.buyOrSell === "buy" || val.buyOrSell === "sell")) {
+        // check if user is in room
+        members.child(val.roomID).child(val.userID).once("value", function (userSnap) {
+          if (userSnap.exists()) {
+            // check if offerID is still valid
+            activeTrades.child(val.roomID).child(val.offerID).once("value", function (offerSnap) {
+              if (offerSnap.exists()) {
+                // process offer for both parties
+                var initiator = offerSnap.val().initiator
+                if (val.buyOrSell === "buy") { // acceptor chooses to buy, initiator sells
+                  var initRef = tradeHistory.child(val.roomID).child(initiator).child("sells");
+                  var userRef = tradeHistory.child(val.roomID).child(val.userID).child("buys");
+                  var price = offerSnap.val().sellPrice;
+                  console.log(initiator + " sells to " + val.userID + " for price " + price);
+                  initRef.push({
+                    partner: val.userID,
+                    price: price
+                  }, function () {
+                    userRef.push({
+                      partner: initiator,
+                      price: price
+                    });
+                  });
+                } else { // acceptor chooses to sell, initiator buys
+                  var initRef = tradeHistory.child(val.roomID).child(initiator).child("buys");
+                  var userRef = tradeHistory.child(val.roomID).child(val.userID).child("sells");
+                  var price = offerSnap.val().buyPrice;
+                  console.log(initiator + " buys from " + val.userID + " for price " + price);
+                  initRef.push({
+                    partner: val.userID,
+                    price: price
+                  }, function () {
+                    userRef.push({
+                      partner: initiator,
+                      price: price
+                    });
+                  });
+                }
+              }
+            });
+          }
+        });
       }
     } else if (val.type === "addUser") {
       if (val.username && val.avatarURL && val.userID) {
