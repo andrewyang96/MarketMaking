@@ -55,6 +55,20 @@ function userIDForm() {
 	if (authData && userForm) {
 		document.getElementById("userID").value = authData.facebook.id;
 	}
+	hideStartButton();
+}
+
+function hideStartButton() {
+	var authData = ref.getAuth();
+	if (authData) {
+		var href = window.location.href;
+		var roomID = href.substr(href.lastIndexOf("/") + 1).split("#")[0];
+		ref.child("rooms").child(roomID).child("host").once("value", function (snapshot) {
+			if (authData.facebook.id !== snapshot.val()) {
+				$("#startButton").remove();
+			}
+		});
+	}
 }
 
 $(document).ready(function () {
@@ -119,20 +133,18 @@ function anythingElse() {
 				// transform roomID into room name
 				ref.child("rooms").child(roomID).once("value", function (roomSnapshot) {
 					$("#roomName").html(roomSnapshot.val().roomName);
-					if (roomSnapshot.val().host){
-						ref.child("events").push({
-							type:"startGame",
-							roomID: roomID,
-							useriD: userID
-					}, function(){
-						//callback function
-					});
-				})
-
-				
-
-			})
-
+				});
+			});
 		});
 	}
+}
+
+function startGame() {
+	var href = window.location.href;
+	var roomID = href.substr(href.lastIndexOf("/") + 1).split("#")[0];
+	ref.child("events").push({
+		type: "startGame",
+		userID: userID,
+		roomID: roomID
+	});
 }

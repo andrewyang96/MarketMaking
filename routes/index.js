@@ -76,6 +76,7 @@ router.get('/rooms/:roomid', function (req, res, next) {
 	res.render('game', {title: 'Game', roomid: req.params.roomid});
 
 });
+
 router.get('/contact', function (req, res, next){
 	res.render('contact', {title: 'Contact'});
 

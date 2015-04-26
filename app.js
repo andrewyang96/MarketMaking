@@ -157,19 +157,26 @@ events.on("value", function (snapshot) {
       }
     } else if (val.type === "startGame") {
       if (val.userID && val.roomID) {
-        rooms.child(val.roomID).child("startTime").set(Date.now(), function () {
-          rooms.child(val.roomID).once("value", function (snapshot) {
-            var data = snapshot.val();
-            var roundLength = data.roundLength;
-            var numRounds = data.numRounds;
-            events.push({
-              type: "rollDice",
-              roomID: roomID,
-              roundLength: roundLength,
-              numRounds: numRounds,
-              secret: config.secretKey
-            });
-          })
+        members.child(val.roomID).once("value", function (memSnapshot) {
+          var numMembers = Object.keys(memSnapshot.val()).length;
+          rooms.child(val.roomID).child("minPlayers").once("value", function (minSnapshot) {
+            if (numMembers >= minSnapshot.val()) { // check if there are enough players
+              rooms.child(val.roomID).child("startTime").set(Date.now(), function () {
+                rooms.child(val.roomID).once("value", function (snapshot) {
+                  var data = snapshot.val();
+                  var roundLength = data.roundLength;
+                  var numRounds = data.numRounds;
+                  events.push({
+                    type: "rollDice",
+                    roomID: roomID,
+                    roundLength: roundLength,
+                    numRounds: numRounds,
+                    secret: config.secretKey
+                  });
+                })
+              });
+            }
+          });
         });
       }
     } else if (val.type === "rollDice") {
