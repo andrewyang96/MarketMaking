@@ -13,6 +13,10 @@ router.get('/', function (req, res, next) {
 router.get('/rooms', function (req, res, next) {
 	res.render('rooms', {title: 'Rooms'});
 });
+router.get('/game',function (req, res, next){
+	res.render('games', {title: 'Games'});
+});
+
 
 router.post('/rooms', function (req, res, next) {
 	var roomName = req.body.name;

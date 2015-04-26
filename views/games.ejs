@@ -1,21 +1,74 @@
 <% include head.ejs %>
 <% include header.ejs %>
 	<div class="jumbotron">
-		<h3 id="roomName"><!--{{roomID}}-->RoomID</h3>
-		<div> </div>
+		<div class="container">
+		<h2 id="roomName">	RoomID</h2>
 
-
-	<!-- buy or sell row -->
-	<form class="form-inline">
-	  <div class="form-group">
-	    <label class="sr-only" for="exampleInputAmount">Amount</label>
-	    <div class="input-group">
-	      <div class="input-group-addon">$</div>
-	      <input type="text" class="form-control" id="InputAmount" placeholder="Amount">
+		<br>
+		<div id="dice"> 6 </div><br><br><br><br><br>
+		<form class="form-inline">
+	  <div class="form-group">  
+	    <div class="input-group"> 
+	      <input type="text" class="form-control" id="InputAmount" placeholder="From">
+	      <input type="text" class="form-control" id="InputAmount" placeholder="To">
 	    </div>
 	  </div>
-  	 <button type="submit" class="btn btn-primary">Transfer cash</button>
-	</form>
-			
+  	 <button type="submit" class="btn btn-primary">Make Offer</button>
+		</div>
+		
+		</form>
+		
+	<div id="contain">
+  	 <div class="show-grip">
+  	 <div id="timer"><span id="time"></span> </div><br><br><br>
+  	 
 	</div>
+	</div>	
+	<br><br>
+	<div class="row">
+  	<div class="col-md-9 col-md-push-3">Buy</div>
+  	<div class="col-md-3 col-md-pull-3">Sell</div>
+  	<br>
+  	<div class="col-md-9 col-md-push-3">Buy</div>
+  	<div class="col-md-3 col-md-pull-3">Sell</div>
+	</div>
+	</div>
+	
+
+	<script>
+	function startTimer(duration, display) {
+    var start = Date.now(),
+        diff,
+        
+        seconds;
+    function timer() {
+        // get the number of seconds that have elapsed since 
+        // startTimer() was called
+        diff = duration - (((Date.now() - start) / 1000) | 0);
+
+        // does the same job as parseInt truncates the float
+        
+        seconds = (diff % 60) | 0;
+
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = seconds; 
+
+        if (diff <= 0) {
+            // add one second so that the count down starts at the full duration
+            // example 05:00 not 04:59
+            start = Date.now() + 200;
+        }
+    };
+    // we don't want to wait a full second before the timer starts
+    timer();
+	    setInterval(timer, 200);
+	}
+
+	window.onload = function () {
+	    var fiveMinutes = 60,
+	        display = document.querySelector('#time');
+	    startTimer(fiveMinutes, display);
+	};
+	</script>
 <% include footer.ejs %>
