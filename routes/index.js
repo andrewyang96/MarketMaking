@@ -63,23 +63,19 @@ router.post('/rooms', function (req, res, next) {
 
 router.get('/rooms/:roomid', function (req, res, next) {
 	console.log("Rendering game. Room ID: " + req.params.roomid);
-	ref.child("rooms").child(req.params.roomid).once("value", function(snapshot){
-		if (snapshot.exists()){
+	var roomID = req.params.roomid;
+	ref.child("rooms").child(roomID).once("value", function (snapshot) {
+		if (snapshot.exists()) {
 			console.log(snapshot.exists());
-			res.render('game', {title: 'Game', roomid: req.params.roomid});
-		}
-		else{
+			res.render('waiting', {title: 'Game', roomid: roomID});
+		} else {
 			res.render("404");
 		}	
 	});
-
-	res.render('game', {title: 'Game', roomid: req.params.roomid});
-
 });
 
 router.get('/contact', function (req, res, next){
 	res.render('contact', {title: 'Contact'});
-
 });
 
 module.exports = router;
