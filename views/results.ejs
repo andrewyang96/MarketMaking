@@ -4,8 +4,8 @@
 	<table class="table table-bordered">
 		<tr class="info"><td >Player</td><td>Scores</td></tr>
 
-		<% for(var i=0; i<result.length; i++) { %>
-		<tr><td><%= result[i].user %></td><td><%= result[i].user %></td></tr>
+		<% for(var key in data) { %>
+		<tr><td><%= key.userID %></td><td><%= key.score %></td></tr>
 		<% } %>
 		
 	</table>
