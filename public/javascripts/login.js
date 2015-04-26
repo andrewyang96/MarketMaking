@@ -85,43 +85,6 @@ function anythingElse() {
 	var roomSrc = $('#rooms').html(); // indicator for rooms
 	var gameSrc = $('#game-area').html(); // indicator for waiting list
 	var tradeSrc = $('#trade-area').html(); // indicator for trading game
-	var time = $('#time').html();
-	if(time){
-		function startTimer(duration, display) {
-    	var start = Date.now(),
-        diff,
-        seconds;
-      
-    	function timer() {
-        // get the number of seconds that have elapsed since 
-        // startTimer() was called
-        diff = duration - (((Date.now() - start) / 1000) | 0);
-
-        // does the same job as parseInt truncates the float
-        
-        seconds = (diff % 60) | 0;
-
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        // display.textContent = seconds; 
-
-	        if (diff <= 0) {
-	            // add one second so that the count down starts at the full duration
-	            // example 05:00 not 04:59
-	            start = Date.now() + 200;
-	        }
-		    };
-		    // we don't want to wait a full second before the timer starts
-		    timer();
-			    setInterval(timer, 200);
-			}
-			
-			window.onload = function () {
-			    var fiveMinutes = 60,
-			        display = document.querySelector('#time');
-			    startTimer(fiveMinutes, display);
-			};
-		}
 	if (roomSrc) {
 		// initialize handlebars variables
 		var roomTemplate = Handlebars.compile(roomSrc);
@@ -183,28 +146,55 @@ function anythingElse() {
 		var roomID = href.substr(href.lastIndexOf("/") + 1).split("#")[0].split("?")[0];
 		var diceRolls = {};
 		var sum = 0;
-		// setup listeners
-		ref.child("activeTrades").child(roomID).on("value", function (snapshot) {
-			// calculate position
-			ref.child("tradeHistory").child(roomID).child(userID).once("value", function (histSnap) {
-				var position = 0;
-				if (histSnap.exists()) {
-					var buys = histSnap.val().buys;
-					var sells = histSnap.val().sells;
-					var numBuys = 0;
-					var numSells = 0;
-					if (buys) {
-						numBuys = Object.keys(buys).length;
-					}
-					if (sells) {
-						numSells = Object.keys(sells).length;
-					}
-					position = numBuys - numSells;
+		var numRounds = 0;
+		var roundLength = 0;
+		var activeTrades = {};
+		var position = 0;
+
+		ref.child("rooms").child(roomID).once("value", function (infoSnap) {
+			numRounds = infoSnap.val().numRounds;
+			roundLength = infoSnap.val().roundLength;
+
+			// setup listeners
+			ref.child("rooms").child(roomID).child("diceRolls").on("value", function (diceSnap) {
+				diceRolls = diceSnap.val();
+				var tempSum = 0;
+				for (var key in diceRolls) {
+					tempSum += parseInt(diceRolls[key]);
 				}
-				// fetch numRounds
-				ref.child("rooms").child(roomID).child("numRounds").once("value", function (numRoundsSnap) {
-					var numRounds = numRoundsSnap.val();
-					var context = {activeTrades: snapshot.val(), roomID: roomID, position: position, diceRolls: diceRolls, sum: sum, numRounds: numRounds, roundNum: Object.keys(diceRolls).length};
+				sum = tempSum;
+				// render
+				var context = {activeTrades: activeTrades, roomID: roomID, position: position, diceRolls: diceRolls, sum: sum, numRounds: numRounds, roundNum: Object.keys(diceRolls).length};
+				var renderedTemplate = template(context);
+				$("#trade-container").html(renderedTemplate);
+				setupListeners();
+				// transform roomID into room name
+				ref.child("rooms").child(roomID).once("value", function (roomSnapshot) {
+					$("#roomName").html(roomSnapshot.val().roomName);
+					// reset timer
+					$("#time").html(roundLength);
+				});
+			});
+
+
+			ref.child("activeTrades").child(roomID).on("value", function (snapshot) {
+				// calculate position
+				ref.child("tradeHistory").child(roomID).child(userID).once("value", function (histSnap) {
+					if (histSnap.exists()) {
+						var buys = histSnap.val().buys;
+						var sells = histSnap.val().sells;
+						var numBuys = 0;
+						var numSells = 0;
+						if (buys) {
+							numBuys = Object.keys(buys).length;
+						}
+						if (sells) {
+							numSells = Object.keys(sells).length;
+						}
+						position = numBuys - numSells;
+					}
+					activeTrades = snapshot.val();
+					var context = {activeTrades: activeTrades, roomID: roomID, position: position, diceRolls: diceRolls, sum: sum, numRounds: numRounds, roundNum: Object.keys(diceRolls).length};
 					var renderedTemplate = template(context);
 					$("#trade-container").html(renderedTemplate);
 					setupListeners();
@@ -214,15 +204,10 @@ function anythingElse() {
 					});
 				});
 			});
-		});
 
-		ref.child("rooms").child(roomID).child("diceRolls").on("value", function (diceSnap) {
-			diceRolls = diceSnap.val();
-			var tempSum = 0;
-			for (var key in diceRolls) {
-				tempSum += parseInt(diceRolls[key]);
-			}
-			sum = tempSum;
+			setInterval(function () {
+				$("#time").html(parseInt($("#time").html()) - 1);
+			}, 1000);
 		});
 	}
 }
