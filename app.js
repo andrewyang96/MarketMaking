@@ -254,7 +254,7 @@ events.on("value", function (snapshot) {
           console.log("Writing trade history for room " + val.roomID);
           var outFile = "data/" + val.roomID + ".json";
           if (!data) data = {};
-          rooms.child(roomID).child("diceRolls").once("value", function (diceSnap) {
+          rooms.child(val.roomID).child("diceRolls").once("value", function (diceSnap) {
             var diceData = diceSnap.val();
             var sum = 0;
             for (var key in diceData) {
