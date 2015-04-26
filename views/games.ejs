@@ -8,8 +8,11 @@
 		<div id="timer" class="span6 pull-right"><span id="time">10</span></div>
 		<br><br><br><br><br>
 
-
-		<div id="dice"> 6 </div><div id="dice"> 6 </div><div id="dice"> 6 </div><div id="dice"> 6 </div><div id="dice"> 6 </div><div id="dice"> 6 </div>
+		{{#each diceRolls}}
+		<div id="dice">
+			{{this}}
+		</div>
+		{{/each}}
 		<br><br><br><br><br>
 
 		<!-- Make offers here -->
@@ -26,8 +29,10 @@
 			</form>
 
 			<!-- Position -->
-			<div class="col-xs-6 pull-right text-center" id="position">
-			Position: {{position}}
+			<div class="col-xs-6 pull-right text-center" id="game-info">
+				<div>Sum of Dice Rolls: {{sum}}</div>
+				<div>Round: {{roundNum}}&#47;{{numRounds}}</div>
+				<div>Position: {{position}}</div>
 			</div>
 		</div>
 
@@ -41,6 +46,7 @@
 			</div>
 			{{/each}}
 		</div>
+
 		<div class="col-xs-6 pull-right">
 			<h3 class="row-fluid text-center">Buy for</h3>
 			{{#each activeTrades}}
@@ -53,30 +59,6 @@
 		</script>
 
 		</div>
-		<table class="table">
-			<thead><tr><td id="tbuy">Buy</td><td id="tbuy">Sell</td></tr></thead>
-			<tr><td>
-				<button type"submit" id="b_buy"><div id="buy" class="buy_p"> 2 </div>
-	  			<div id="buy" class="buy_p"> 6 </div></button>
-	  		</td>
-	  		<td>
-	  			<button type"submit" id="b_buy"><div id="buy" class="buy_p"> 2 </div>
-	  			<div id="buy" class="buy_p"> 6 </div></button>
-	  		</td>
-	        <tr>
-	        <td>
-	        	<button type"submit" id="b_buy"><div id="buy" class="buy_p"> 2 </div>
-	  			<div id="buy" class="buy_p"> 6 </div></button>
-	  		</td>
-	  		<td>
-	  			<button type"submit" id="b_buy"><div id="buy" class="buy_p"> 2 </div>
-	  			<div id="buy" class="buy_p"> 6 </div></button>
-	  		</td>
-	            
-		</table>
-
-		
-	
 
 	</script>
 

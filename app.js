@@ -164,7 +164,7 @@ events.on("value", function (snapshot) {
                 // process offer for both parties
                 var initiator = offerSnap.val().initiator;
                 // prevent a person from buying off of himself
-                if (true) {
+                if (initiator !== val.userID) {
                   activeTrades.child(val.roomID).child(val.offerID).remove();
                   if (val.buyOrSell === "buy") { // acceptor chooses to buy, initiator sells
                     var initRef = tradeHistory.child(val.roomID).child(initiator).child("sells");
@@ -287,6 +287,9 @@ function diceFunc(roomID, roundLength, numRounds, counter) {
   });
 
   counter += 1;
+  // purge active trades after each dice roll
+  activeTrades.child(roomID).remove();
+
   if (counter < numRounds) {
     setTimeout(diceFunc, roundLength * 1000, roomID, roundLength, numRounds, counter);
   } else {

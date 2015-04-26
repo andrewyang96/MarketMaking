@@ -181,6 +181,8 @@ function anythingElse() {
 		var template = Handlebars.compile(tradeSrc);
 		var href = window.location.href;
 		var roomID = href.substr(href.lastIndexOf("/") + 1).split("#")[0].split("?")[0];
+		var diceRolls = {};
+		var sum = 0;
 		// setup listeners
 		ref.child("activeTrades").child(roomID).on("value", function (snapshot) {
 			// calculate position
@@ -199,16 +201,28 @@ function anythingElse() {
 					}
 					position = numBuys - numSells;
 				}
-				var context = {activeTrades: snapshot.val(), roomID: roomID, position: position};
-				var renderedTemplate = template(context);
-				$("#trade-container").html(renderedTemplate);
-				console.log("Setting up listeners");
-				setupListeners();
-				// transform roomID into room name
-				ref.child("rooms").child(roomID).once("value", function (roomSnapshot) {
-					$("#roomName").html(roomSnapshot.val().roomName);
+				// fetch numRounds
+				ref.child("rooms").child(roomID).child("numRounds").once("value", function (numRoundsSnap) {
+					var numRounds = numRoundsSnap.val();
+					var context = {activeTrades: snapshot.val(), roomID: roomID, position: position, diceRolls: diceRolls, sum: sum, numRounds: numRounds, roundNum: Object.keys(diceRolls).length};
+					var renderedTemplate = template(context);
+					$("#trade-container").html(renderedTemplate);
+					setupListeners();
+					// transform roomID into room name
+					ref.child("rooms").child(roomID).once("value", function (roomSnapshot) {
+						$("#roomName").html(roomSnapshot.val().roomName);
+					});
 				});
 			});
+		});
+
+		ref.child("rooms").child(roomID).child("diceRolls").on("value", function (diceSnap) {
+			diceRolls = diceSnap.val();
+			var tempSum = 0;
+			for (var key in diceRolls) {
+				tempSum += parseInt(diceRolls[key]);
+			}
+			sum = tempSum;
 		});
 	}
 }
