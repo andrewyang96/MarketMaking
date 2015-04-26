@@ -5,7 +5,7 @@
 
 		<script id="trade-area" type="type/x-handlebars-template">
 		<h2 id="roomName">{{roomID}}</h2>
-		<br><br><br><br><br>
+		<br><br>
 
 
 		<div id="dice"> 6 </div><div id="dice"> 6 </div><div id="dice"> 6 </div><div id="dice"> 6 </div><div id="dice"> 6 </div><div id="dice"> 6 </div>
@@ -23,17 +23,9 @@
 	  	  <button type="button" class="btn btn-primary" id="trade">Make Offer</button>
 		</form>
 
-		
+		<br>
 
-	<!--<div id="contain">
-  	 <div class="show-grip">
-  	 <div id="timer"><span id="time"></span> </div><br><br><br>
-  	 
-	
-	</div>	
-	</div> -->
-	
-	<div class="row">
+	<!--<div class="row">
   	<div id="frow"class="col-md-9 col-md-push-3">Buy</div>
   	<div id="frow"class="col-md-3 col-md-pull-3">Sell</div>
   	<br>
@@ -53,12 +45,29 @@
 	</div>
 
 		<!-- Timer -->
-		<div id="contain">
-	  		<div class="show-grip">
-	  			<div id="timer"><span id="time"></span> </div><br><br><br>
-			</div>
-		</div>	
-		<br><br>
+			
+	
+	<table class="table">
+		<thead><tr><td>Buy</td><td>Sell</td></tr></thead>
+		<tr><td>
+			<button type"submit" id="b_buy"><div id="buy" class="buy_p"> 2 </div>
+  			<div id="buy" class="buy_p"> 6 </div></button>
+  		</td>
+  		<td>
+  			<button type"submit" id="b_buy"><div id="buy" class="buy_p"> 2 </div>
+  			<div id="buy" class="buy_p"> 6 </div></button>
+  		</td>
+        <tr>
+        <td>
+        	<button type"submit" id="b_buy"><div id="buy" class="buy_p"> 2 </div>
+  			<div id="buy" class="buy_p"> 6 </div></button>
+  		</td>
+  		<td>
+  			<button type"submit" id="b_buy"><div id="buy" class="buy_p"> 2 </div>
+  			<div id="buy" class="buy_p"> 6 </div></button>
+  		</td>
+            
+	</table>
 
 		
 	

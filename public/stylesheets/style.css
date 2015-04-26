@@ -62,8 +62,7 @@ span.badge.count{
 	font-weight:0.1px;
 }
 .col-md-push-3{
-	left:-31%;
-	text-align:center;
+	left:0%;
 }
 #dice{
     width:100px;
@@ -82,6 +81,9 @@ span.badge.count{
 .jumbotron{
 	position:relative;
 	min-height: 500px
+}
+.col-md-9{
+	width:60%;
 }
 .span1{
 	background-color: lightblue;
