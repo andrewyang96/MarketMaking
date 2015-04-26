@@ -91,6 +91,7 @@ function anythingElse() {
     	var start = Date.now(),
         diff,
         seconds;
+      
     	function timer() {
         // get the number of seconds that have elapsed since 
         // startTimer() was called
@@ -114,7 +115,7 @@ function anythingElse() {
 		    timer();
 			    setInterval(timer, 200);
 			}
-
+			
 			window.onload = function () {
 			    var fiveMinutes = 60,
 			        display = document.querySelector('#time');
