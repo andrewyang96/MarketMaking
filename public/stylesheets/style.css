@@ -138,6 +138,11 @@ span.badge.count{
 }
 div#buy,div#sell{
 	margin: auto 31px;
+
+}
+button#b_buy{
+	border:none;
+	background-color: inherit;
 }
 td{
 	text-align:center;
