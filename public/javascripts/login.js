@@ -200,6 +200,9 @@ function anythingElse() {
 
 			// setup listeners
 			ref.child("rooms").child(roomID).child("diceRolls").on("value", function (diceSnap) {
+				if (!diceSnap.exists()) {
+					window.location.href = "/results/" + roomID;
+				}
 				diceRolls = diceSnap.val();
 				var tempSum = 0;
 				for (var key in diceRolls) {
@@ -237,6 +240,7 @@ function anythingElse() {
 						position = numBuys - numSells;
 					}
 					activeTrades = snapshot.val();
+					var oldTime = $("#time").html();
 					var context = {activeTrades: activeTrades, roomID: roomID, position: position, diceRolls: diceRolls, sum: sum, numRounds: numRounds, roundNum: Object.keys(diceRolls).length};
 					var renderedTemplate = template(context);
 					$("#trade-container").html(renderedTemplate);
@@ -244,6 +248,7 @@ function anythingElse() {
 					// transform roomID into room name
 					ref.child("rooms").child(roomID).once("value", function (roomSnapshot) {
 						$("#roomName").html(roomSnapshot.val().roomName);
+						$("#time").html(oldTime);
 					});
 				});
 			});
