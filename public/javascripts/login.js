@@ -63,11 +63,13 @@ function hideStartButton() {
 	if (authData) {
 		var href = window.location.href;
 		var roomID = href.substr(href.lastIndexOf("/") + 1).split("#")[0];
-		ref.child("rooms").child(roomID).child("host").once("value", function (snapshot) {
-			if (authData.facebook.id !== snapshot.val()) {
-				$("#startButton").remove();
-			}
-		});
+		if (roomID !== "") {
+			ref.child("rooms").child(roomID).child("host").once("value", function (snapshot) {
+				if (authData.facebook.id !== snapshot.val()) {
+					$("#startGameButton").remove();
+				}
+			});
+		}
 	}
 }
 
