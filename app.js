@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var fs = require('fs');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -211,21 +212,20 @@ events.on("value", function (snapshot) {
       if (val.userID && val.roomID) {
         members.child(val.roomID).once("value", function (memSnapshot) {
           var numMembers = Object.keys(memSnapshot.val()).length;
-          rooms.child(val.roomID).child("minPlayers").once("value", function (minSnapshot) {
-            if (numMembers >= minSnapshot.val()) { // check if there are enough players
+          rooms.child(val.roomID).once("value", function (roomSnap) {
+            var minPlayers = roomSnap.val().minPlayers;
+            var host = roomSnap.val().host;
+            // check if there are enough players and host is triggering event
+            if (numMembers >= minPlayers && host === val.userID) {
               rooms.child(val.roomID).child("startTime").set(Date.now(), function () {
                 rooms.child(val.roomID).once("value", function (snapshot) {
                   var data = snapshot.val();
                   var roundLength = data.roundLength;
                   var numRounds = data.numRounds;
-                  events.push({
-                    type: "rollDice",
-                    roomID: val.roomID,
-                    roundLength: roundLength,
-                    numRounds: numRounds,
-                    secret: config.secretKey
-                  });
-                })
+                  console.log("Starting game with rollDice");
+                  // NOTE: BE CAREFUL IF THIS PROGRAM RUNS ON MULTIPLE SERVERS!!
+                  diceFunc(val.roomID, roundLength, numRounds, 0);
+                });
               });
             }
           });
@@ -233,43 +233,33 @@ events.on("value", function (snapshot) {
       }
     } else if (val.type === "rollDice") {
       if (val.roomID && val.roundLength && val.numRounds && val.secret === config.secretKey) {
-        var num = roll.roll('d6');
-        console.log("Rolled a " + num.result);
-        rooms.child(val.roomID).child("diceRolls").push(num.result, function () {
-          console.log("Push successful");
-          rooms.child(val.roomID).child("diceRolls").once("value", function (snapshot) {
-            var count = Object.keys(snapshot.val()).length;
-            // check if there's at least one more round left
-            if (count < val.numRounds) {
-              console.log("count " + count + " < numRounds " + val.numRounds);
-              setTimeout(function () {
-                console.log("Rolling dice for room " + val.roomID + " after " + val.roundLength + " seconds");
-                events.push({
-                  type: "rollDice",
-                  roomID: val.roomID,
-                  roundLength: val.roundLength,
-                  numRounds: val.numRounds,
-                  secret: config.secretKey
-                })
-              }, val.roundLength * 1000);
-            } else { // else terminate game at the next timeout
-              console.log("count " + count + " >= numRounds " + val.numRounds);
-              setTimeout(function () {
-                console.log("End of game for room " + val.roomID);
-                events.push({
-                  type: "endGame",
-                  roomID: val.roomID,
-                  secret: config.secretKey
-                });
-              }, val.roundLength * 1000);
-            }
-          });
-        });
+        console.log("Deprecated rollDice");
+        // diceFunc(val.roomID, val.roundLength, val.numRounds, 0);
       }
     } else if (val.type === "endGame") {
       if (val.roomID && val.secret === config.secretKey) {
-        // the presence of a "finished" key means that the game is finished
-        rooms.child(val.roomID).child("finished").set(true);
+        // save tradeHistory
+        tradeHistory.child(val.roomID).once("value", function (snapshot) {
+          var data = snapshot.val();
+          console.log("Writing trade history for room " + val.roomID);
+          var outFile = "data/" + val.roomID + ".json";
+          if (!data) data = {};
+          fs.writeFile(outFile, JSON.stringify(data, null, 4), function (err) {
+            if (err) {
+              console.log(err);
+            } else {
+              console.log("JSON written to " + outFile);
+            }
+            // then get rid of everything
+            rooms.child(val.roomID).remove(function () {
+              members.child(val.roomID).remove(function () {
+                activeTrades.child(val.roomID).remove(function () {
+                  tradeHistory.child(val.roomID).remove();
+                });
+              });
+            });
+          });
+        });
       }
     }
 
@@ -278,5 +268,26 @@ events.on("value", function (snapshot) {
   });
 });
 
+function diceFunc(roomID, roundLength, numRounds, counter) {
+  var num = roll.roll('d6');
+  console.log("Rolled a " + num.result);
+
+  rooms.child(roomID).child("diceRolls").push(num.result, function () {
+    console.log("Push successful: " + num.result);
+  });
+
+  counter += 1;
+  if (counter < numRounds) {
+    setTimeout(diceFunc, roundLength * 1000, roomID, roundLength, numRounds, counter);
+  } else {
+    setTimeout(function () {
+      events.push({
+        type: "endGame",
+        roomID: roomID,
+        secret: config.secretKey
+      });
+    }, roundLength * 1000);
+  }
+}
 
 module.exports = app;
