@@ -1,14 +1,15 @@
 <% include head.ejs %>
 <% include header.ejs %>
 	<div class="jumbotron">
-		<div class="container" id="trade-container">
+		<div id="trade-container">
 
 		<script id="trade-area" type="type/x-handlebars-template">
 		<h2 id="roomName">{{roomID}}</h2>
-		<br>
+		<br><br><br><br><br>
+
 
 		<div id="dice"> 6 </div><div id="dice"> 6 </div><div id="dice"> 6 </div><div id="dice"> 6 </div><div id="dice"> 6 </div><div id="dice"> 6 </div>
-		<br><br><br><br><br><br><br><br><br><br>
+		<br><br><br><br><br>
 
 		<!-- Make offers here -->
 		<form class="form-inline">
@@ -21,45 +22,50 @@
 		  </div>
 	  	  <button type="button" class="btn btn-primary" id="trade">Make Offer</button>
 		</form>
+
 		
 
 	<div id="contain">
   	 <div class="show-grip">
   	 <div id="timer"><span id="time"></span> </div><br><br><br>
   	 
-	</div>
+	
 	</div>	
+	</div> 
 	
 	<div class="row">
   	<div id="frow"class="col-md-9 col-md-push-3">Buy</div>
   	<div id="frow"class="col-md-3 col-md-pull-3">Sell</div>
   	<br>
-  	<button type"submit" id="b_buy"><div id="buy" class="buy_p"> 2 </div><div id="buy" class="buy_p"> 6 </div></button>
-  	<button type"submit" id="b_sell"><div id="sell" class="sell_p"> 6 </div><div id="sell" class="sell_p"> 6 </div></button>
+  	<button type"submit" id="b_buy"><div id="buy" class="buy_p"> 2 </div>
+  		<div id="buy" class="buy_p"> 6 </div>
+  	</button>
+  	<button type"submit" id="b_sell"><div id="sell" class="sell_p"> 6 </div>
+  		<div id="sell" class="sell_p"> 6 </div>
+  	</button>
   	<br>
-  	<button type"submit" id="b_buy"><div id="buy" class="buy_p"> 6 </div><div id="buy" class="buy_p"> 6 </div></button>
-  	<button type"submit" id="b_sell"><div id="sell" class="sell_p"> 6 </div><div id="sell" class="sell_p"> 6 </div></button>
+  	<button type"submit" id="b_buy"><div id="buy" class="buy_p"> 6 </div>
+  		<div id="buy" class="buy_p"> 6 </div>
+  	</button>
+  	<button type"submit" id="b_sell"><div id="sell" class="sell_p"> 6 </div>
+  		<div id="sell" class="sell_p"> 6 </div>
+  	</button>
 	</div>
 
-	<!-- Timer -->
-	<div id="contain">
-  		<div class="show-grip">
-  			<div id="timer"><span id="time"></span> </div><br><br><br>
-		</div>
-	</div>	
-	<br><br>
+		<!-- Timer -->
+		<div id="contain">
+	  		<div class="show-grip">
+	  			<div id="timer"><span id="time"></span> </div><br><br><br>
+			</div>
+		</div>	
+		<br><br>
 
-	<!-- View/accept trades here -->
-	<div class="row">
-	  	<div class="col-md-9 col-md-push-3">Buy</div>
-	  	<div class="col-md-3 col-md-pull-3">Sell</div>
-	  	<br>
-	  	<div class="col-md-9 col-md-push-3">Buy</div>
-	  	<div class="col-md-3 col-md-pull-3">Sell</div>
-	</div>
+		
+	
 
 	</script>
 
+	</div>
 	</div>
 	
 

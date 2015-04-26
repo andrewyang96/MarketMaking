@@ -54,7 +54,7 @@ span.badge.count{
 	font-size:42px;
 }
 .row{
-	margin-top:250px;
+	margin-top:0px;
 }
 #frow{
 	margin-top:25px;
@@ -79,11 +79,6 @@ span.badge.count{
   
 }
 
-.jumbotron .container{
-	width:423px;
-	float:left;
-	padding,margin:0px;
-}
 .jumbotron{
 	position:relative;
 	min-height: 500px
@@ -138,14 +133,14 @@ span.badge.count{
 #InputAmount{
 	width:80px;
 }
-div#buy, div#sell{
+div#buy,div#sell{
 	margin: auto 31px;
 }
 
-button#b_sell{
+button #b_sell{
 	padding-left:17%;
 }
-button#b_buy{
+button #b_buy{
 	padding-left:8%;
 }
 
