@@ -61,7 +61,6 @@ router.post('/rooms', function (req, res, next) {
 });
 
 router.get('/rooms/:roomid', function (req, res, next) {
-	console.log("Rendering game. Room ID: " + req.params.roomid);
 	ref.child("rooms").child(req.params.roomid).once("value", function (snapshot){
 		if (snapshot.exists()) {
 			ref.child("rooms").child(req.params.roomid).child("startTime").once("value", function (startSnap) {
@@ -84,5 +83,7 @@ router.get('/contact', function (req, res, next){
 	res.render('contact', {title: 'Contact'});
 
 });
-
+router.get('/games',function (req, res, next){
+	res.render('games',{title:'Games'});
+});
 module.exports = router;
