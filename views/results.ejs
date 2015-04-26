@@ -3,7 +3,10 @@
 <div class="jumbotron">
 	<table class="table table-bordered">
 		<tr class="info"><td >Player</td><td>Scores</td></tr>
-		<tr><td>XXX</td><td>100</td></tr>
+
+		<% for(var i=0; i<result.length; i++) { %>
+		<tr><td><%= result[i].user %></td><td><%= result[i].user %></td></tr>
+		<% } %>
 		
 	</table>
 </div>
