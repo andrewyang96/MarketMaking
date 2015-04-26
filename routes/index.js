@@ -16,6 +16,9 @@ router.get('/rooms', function (req, res, next) {
 router.get('/game',function (req, res, next){
 	res.render('games', {title: 'Games'});
 });
+router.get('/result',function(req, res, next){
+	res.render('results', {title: 'Result'});
+});
 
 
 router.post('/rooms', function (req, res, next) {
