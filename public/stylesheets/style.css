@@ -103,6 +103,7 @@ span.badge.count{
 .buy_p{
 	left:-31%;
 	text-align:center;
+	border:none;
 }
 .sell_p{
 	left:-31%;
@@ -138,17 +139,12 @@ span.badge.count{
 div#buy,div#sell{
 	margin: auto 31px;
 }
-
-button .b_sell{
-	padding-left:17%;
+td{
+	text-align:center;
 }
-button .b_buy{
-	padding-left:8%;
-}
-
-.b_sell, .b_buy{
-	border:none;
-	background-color:inherit;
+#tbuy{
+	text-align:center;
+	font-size: 18px;
 }
 
 .trade {
