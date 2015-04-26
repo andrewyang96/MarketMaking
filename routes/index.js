@@ -81,6 +81,7 @@ router.get('/rooms/:roomid', function (req, res, next) {
 			res.render("404");
 		}	
 	});
+	});
 });
 
 router.get('/contact', function (req, res, next){
@@ -90,3 +91,6 @@ router.get('/games',function (req, res, next){
 	res.render('games',{title:'Games'});
 });
 module.exports = router;
+
+
+
