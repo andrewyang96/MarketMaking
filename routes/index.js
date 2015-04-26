@@ -70,8 +70,13 @@ router.get('/rooms/:roomid', function (req, res, next) {
 	ref.child("rooms").child(roomID).once("value", function (snapshot) {
 
 		if (snapshot.exists()) {
-			console.log(snapshot.exists());
-			res.render('waiting', {title: 'Game', roomid: roomID});
+			ref.child("rooms").child(roomID).child("startTime").once("value", function (startSnap) {
+				if (startSnap.exists()) {
+					res.render('games', {title: 'Game', roomid: roomID});
+				} else {
+					res.render('waiting', {title: 'Waiting', roomid: roomID});
+				}
+			});
 		} else {
 			res.render("404");
 		}	
