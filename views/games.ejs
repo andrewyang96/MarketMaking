@@ -1,37 +1,46 @@
 <% include head.ejs %>
 <% include header.ejs %>
 	<div class="jumbotron">
-		<div class="container">
-		<h2 id="roomName">	RoomID</h2>
+		<div class="container" id="trade-container">
 
+		<script id="trade-area" type="type/x-handlebars-template">
+		<h2 id="roomName">{{roomID}}</h2>
 		<br>
+
+		<!-- Dice -->
 		<div id="dice"> 6 </div><br><br><br><br><br>
+
+		<!-- Make offers here -->
 		<form class="form-inline">
-	  <div class="form-group">  
-	    <div class="input-group"> 
-	      <input type="text" class="form-control" id="InputAmount" placeholder="From">
-	      <input type="text" class="form-control" id="InputAmount" placeholder="To">
-	    </div>
-	  </div>
-  	 <button type="submit" class="btn btn-primary">Make Offer</button>
-		</div>
+		  <div class="form-group">  
+		    <div class="input-group"> 
+		    	<input type="number" min="0" max="50" class="form-control" id="buyPrice" placeholder="Buy">
+		    	<input type="number" min="0" max="50" class="form-control" id="sellPrice" placeholder="Sell">
+		    	<input type="hidden" id="roomID" value="{{userID}}">
+		    </div>
+		  </div>
+	  	  <button type="button" class="btn btn-primary" id="trade">Make Offer</button>
 		
 		</form>
 		
-	<div id="contain">
-  	 <div class="show-grip">
-  	 <div id="timer"><span id="time"></span> </div><br><br><br>
-  	 
-	</div>
-	</div>	
-	<br><br>
-	<div class="row">
-  	<div class="col-md-9 col-md-push-3">Buy</div>
-  	<div class="col-md-3 col-md-pull-3">Sell</div>
-  	<br>
-  	<div class="col-md-9 col-md-push-3">Buy</div>
-  	<div class="col-md-3 col-md-pull-3">Sell</div>
-	</div>
+		<!-- Timer -->
+		<div id="contain">
+	  		<div class="show-grip">
+	  			<div id="timer"><span id="time"></span> </div><br><br><br>
+			</div>
+		</div>	
+		<br><br>
+
+		<!-- View/accept trades here -->
+		<div class="row">
+		  	<div class="col-md-9 col-md-push-3">Buy</div>
+		  	<div class="col-md-3 col-md-pull-3">Sell</div>
+		  	<br>
+		  	<div class="col-md-9 col-md-push-3">Buy</div>
+		  	<div class="col-md-3 col-md-pull-3">Sell</div>
+		</div>
+
+		</script>
 	</div>
 	
 
@@ -52,7 +61,7 @@
 
         seconds = seconds < 10 ? "0" + seconds : seconds;
 
-        display.textContent = seconds; 
+        // display.textContent = seconds; 
 
         if (diff <= 0) {
             // add one second so that the count down starts at the full duration

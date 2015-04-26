@@ -83,7 +83,8 @@ $(document).ready(function () {
 
 function anythingElse() {
 	var roomSrc = $('#rooms').html(); // indicator for rooms
-	var gameSrc = $('#game-area').html(); // indicator for game
+	var gameSrc = $('#game-area').html(); // indicator for waiting list
+	var tradeSrc = $('#trade-area').html(); // indicator for trading game
 	if (roomSrc) {
 		// initialize handlebars variables
 		var roomTemplate = Handlebars.compile(roomSrc);
@@ -119,12 +120,11 @@ function anythingElse() {
 	if (gameSrc) {
 		// initialize handlebars variables
 		var gameTemplate = Handlebars.compile(gameSrc);
-		var gameStarted = false;
 		// get room ID from URL
 		var href = window.location.href;
 		var roomID = href.substr(href.lastIndexOf("/") + 1).split("#")[0];
 		ref.child("members").child(roomID).on("value", function (snapshot) {
-			context = {members: snapshot.val(), roomID: roomID};
+			var context = {members: snapshot.val(), roomID: roomID};
 			var renderedTemplate = gameTemplate(context);
 			$("#game-view").html(renderedTemplate);
 			// transform userIDs to names
@@ -140,6 +140,24 @@ function anythingElse() {
 			});
 		});
 	}
+	if (tradeSrc) {
+		// initialize handlebars variables
+		var template = Handlebars.compile(tradeSrc);
+		var href = window.location.href;
+		var roomID = href.substr(href.lastIndexOf("/") + 1).split("#")[0].split("?")[0];
+		// setup listeners
+		ref.child("activeTrades").child(roomID).on("value", function (snapshot) {
+			var context = {activeTrades: snapshot.val(), roomID: roomID};
+			var renderedTemplate = template(context);
+			$("#trade-container").html(renderedTemplate);
+			console.log("Setting up listeners");
+			setupListeners();
+			// transform roomID into room name
+			ref.child("rooms").child(roomID).once("value", function (roomSnapshot) {
+				$("#roomName").html(roomSnapshot.val().roomName);
+			});
+		});
+	}
 }
 
 function startGame() {
@@ -151,5 +169,24 @@ function startGame() {
 		roomID: roomID
 	}, function () {
 		location.reload();
+	});
+}
+
+function setupListeners() {
+	$("#trade").click(function () {
+		var buyPrice = $("#buyPrice").val();
+		var sellPrice = $("#sellPrice").val();
+		var roomID = $("#roomID").val();
+		console.log("Trying price " + buyPrice + " and " + sellPrice);
+		if (buyPrice <= sellPrice - 2) { // maintain 2-point spread
+			console.log("Has good spred");
+			ref.child("events").push({
+				type: "makeOffer",
+				buyPrice: buyPrice,
+				sellPrice: sellPrice,
+				roomID: roomID,
+				userID: userID
+			});
+		}
 	});
 }
