@@ -47,13 +47,21 @@ router.post('/rooms', function (req, res, next) {
 		});
 	} else if (userID && roomID) { // check validity for joining a room
 		console.log("Joining room " + roomID);
-		ref.child("events").push({
-			type: "joinRoom",
-			userID: userID,
-			roomID: roomID
-		}, function () {
-			res.redirect("/rooms/" + roomID);
-		});
+		ref.child("rooms").child(roomID).child("startTime").once("value", function (snapshot) {
+			if (!snapshot.exists()) {
+				ref.child("events").push({
+					type: "joinRoom",
+					userID: userID,
+					roomID: roomID
+				}, function () {
+					res.redirect("/rooms/" + roomID);
+				});
+			} else { // game already started
+				console.log("Game already started");
+				res.redirect("/rooms");
+			}
+		})
+		
 	} else { // invalid POST
 		console.log("Invalid POST in /room");
 		res.redirect("/rooms");
