@@ -7,7 +7,6 @@ var ref = new Firebase("https://market-making.firebaseio.com/");
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-	console.log('jkasdf');
 	res.render('index', { title: 'Market Making'});
 });
 

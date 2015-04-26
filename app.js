@@ -168,7 +168,7 @@ events.on("value", function (snapshot) {
                   var numRounds = data.numRounds;
                   events.push({
                     type: "rollDice",
-                    roomID: roomID,
+                    roomID: val.roomID,
                     roundLength: roundLength,
                     numRounds: numRounds,
                     secret: config.secretKey
@@ -182,13 +182,16 @@ events.on("value", function (snapshot) {
     } else if (val.type === "rollDice") {
       if (val.roomID && val.roundLength && val.numRounds && val.secret === config.secretKey) {
         var num = roll.roll('d6');
-        console.log("Rolled a " + num);
-        rooms.child(val.roomID).child("diceRolls").push(num, function () {
+        console.log("Rolled a " + num.result);
+        rooms.child(val.roomID).child("diceRolls").push(num.result, function () {
+          console.log("Push successful");
           rooms.child(val.roomID).child("diceRolls").once("value", function (snapshot) {
-            var count = Object.key(snapshot.val()).length;
+            var count = Object.keys(snapshot.val()).length;
             // check if there's at least one more round left
             if (count < val.numRounds) {
+              console.log("count " + count + " < numRounds " + val.numRounds);
               setTimeout(function () {
+                console.log("Rolling dice for room " + val.roomID + " after " + val.roundLength + " seconds");
                 events.push({
                   type: "rollDice",
                   roomID: val.roomID,
@@ -198,7 +201,9 @@ events.on("value", function (snapshot) {
                 })
               }, val.roundLength * 1000);
             } else { // else terminate game at the next timeout
+              console.log("count " + count + " >= numRounds " + val.numRounds);
               setTimeout(function () {
+                console.log("End of game for room " + val.roomID);
                 events.push({
                   type: "endGame",
                   roomID: val.roomID,

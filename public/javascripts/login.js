@@ -149,5 +149,7 @@ function startGame() {
 		type: "startGame",
 		userID: userID,
 		roomID: roomID
+	}, function () {
+		location.reload();
 	});
 }
