@@ -5,11 +5,16 @@
 		
 		<script id="trade-area" type="type/x-handlebars-template">
 		<h2 id="roomName" class="span6 pull-left">{{roomID}}</h2>
-		
+
+		<div id="timer" class="span6 pull-right"><span id="time">0</span></div>
+
 		<br><br><br><br><br>
 
-
-		<div id="dice"> 6 </div><div id="dice"> 6 </div><div id="dice"> 6 </div><div id="dice"> 6 </div><div id="dice"> 6 </div><div id="dice"> 6 </div>
+		{{#each diceRolls}}
+		<div id="dice">
+			{{this}}
+		</div>
+		{{/each}}
 		<br><br><br><br><br>
 
 		<!-- Make offers here -->
@@ -26,8 +31,10 @@
 			</form>
 
 			<!-- Position -->
-			<div class="col-xs-6 pull-right text-center" id="position">
-			Position: {{position}}
+			<div class="col-xs-6 pull-right text-center" id="game-info">
+				<div>Sum of Dice Rolls: {{sum}}</div>
+				<div>Round: {{roundNum}}&#47;{{numRounds}}</div>
+				<div>Position: {{position}}</div>
 			</div>
 		</div>
 
@@ -41,6 +48,7 @@
 			</div>
 			{{/each}}
 		</div>
+
 		<div class="col-xs-6 pull-right">
 			<h3 class="row-fluid text-center">Buy for</h3>
 			{{#each activeTrades}}
@@ -53,30 +61,6 @@
 		</script>
 
 		</div>
-		<table class="table">
-			
-			<tr><td>
-				<button type"submit" id="b_buy"><div id="buy" class="buy_p"> 2 </div>
-	  			<div id="buy" class="buy_p"> 6 </div></button>
-	  		</td>
-	  		<td>
-	  			<button type"submit" id="b_buy"><div id="buy" class="buy_p"> 2 </div>
-	  			<div id="buy" class="buy_p"> 6 </div></button>
-	  		</td>
-	        <tr>
-	        <td>
-	        	<button type"submit" id="b_buy"><div id="buy" class="buy_p"> 2 </div>
-	  			<div id="buy" class="buy_p"> 6 </div></button>
-	  		</td>
-	  		<td>
-	  			<button type"submit" id="b_buy"><div id="buy" class="buy_p"> 2 </div>
-	  			<div id="buy" class="buy_p"> 6 </div></button>
-	  		</td>
-	            
-		</table>
-
-		
-	
 
 	</script> 
 
@@ -84,41 +68,4 @@
 
 	</div>
 	
-
-	<script>
-	function startTimer(duration, display) {
-    var start = Date.now(),
-        diff,
-        
-        seconds;
-    function timer() {
-        // get the number of seconds that have elapsed since 
-        // startTimer() was called
-        diff = duration - (((Date.now() - start) / 1000) | 0);
-
-        // does the same job as parseInt truncates the float
-        
-        seconds = (diff % 60) | 0;
-
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        // display.textContent = seconds; 
-
-        if (diff <= 0) {
-            // add one second so that the count down starts at the full duration
-            // example 05:00 not 04:59
-            start = Date.now() + 200;
-        }
-    };
-    // we don't want to wait a full second before the timer starts
-    timer();
-	    setInterval(timer, 200);
-	}
-
-	window.onload = function () {
-	    var fiveMinutes = 60,
-	        display = document.querySelector('#time');
-	    startTimer(fiveMinutes, display);
-	};
-	</script>
 <% include footer.ejs %>

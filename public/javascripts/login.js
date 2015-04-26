@@ -85,6 +85,7 @@ function anythingElse() {
 	var roomSrc = $('#rooms').html(); // indicator for rooms
 	var gameSrc = $('#game-area').html(); // indicator for waiting list
 	var tradeSrc = $('#trade-area').html(); // indicator for trading game
+
 	var time = $('#time').html();
 
 	if(time){
@@ -125,6 +126,7 @@ function anythingElse() {
 			    startTimer(fiveMinutes, display);
 			};
 		}
+
 
 	if (roomSrc) {
 		// initialize handlebars variables
@@ -185,34 +187,70 @@ function anythingElse() {
 		var template = Handlebars.compile(tradeSrc);
 		var href = window.location.href;
 		var roomID = href.substr(href.lastIndexOf("/") + 1).split("#")[0].split("?")[0];
-		// setup listeners
-		ref.child("activeTrades").child(roomID).on("value", function (snapshot) {
-			// calculate position
-			ref.child("tradeHistory").child(roomID).child(userID).once("value", function (histSnap) {
-				var position = 0;
-				if (histSnap.exists()) {
-					var buys = histSnap.val().buys;
-					var sells = histSnap.val().sells;
-					var numBuys = 0;
-					var numSells = 0;
-					if (buys) {
-						numBuys = Object.keys(buys).length;
-					}
-					if (sells) {
-						numSells = Object.keys(sells).length;
-					}
-					position = numBuys - numSells;
+		var diceRolls = {};
+		var sum = 0;
+		var numRounds = 0;
+		var roundLength = 0;
+		var activeTrades = {};
+		var position = 0;
+
+		ref.child("rooms").child(roomID).once("value", function (infoSnap) {
+			numRounds = infoSnap.val().numRounds;
+			roundLength = infoSnap.val().roundLength;
+
+			// setup listeners
+			ref.child("rooms").child(roomID).child("diceRolls").on("value", function (diceSnap) {
+				diceRolls = diceSnap.val();
+				var tempSum = 0;
+				for (var key in diceRolls) {
+					tempSum += parseInt(diceRolls[key]);
 				}
-				var context = {activeTrades: snapshot.val(), roomID: roomID, position: position};
+				sum = tempSum;
+				// render
+				var context = {activeTrades: activeTrades, roomID: roomID, position: position, diceRolls: diceRolls, sum: sum, numRounds: numRounds, roundNum: Object.keys(diceRolls).length};
 				var renderedTemplate = template(context);
 				$("#trade-container").html(renderedTemplate);
-				console.log("Setting up listeners");
 				setupListeners();
 				// transform roomID into room name
 				ref.child("rooms").child(roomID).once("value", function (roomSnapshot) {
 					$("#roomName").html(roomSnapshot.val().roomName);
+					// reset timer
+					$("#time").html(roundLength);
 				});
 			});
+
+
+			ref.child("activeTrades").child(roomID).on("value", function (snapshot) {
+				// calculate position
+				ref.child("tradeHistory").child(roomID).child(userID).once("value", function (histSnap) {
+					if (histSnap.exists()) {
+						var buys = histSnap.val().buys;
+						var sells = histSnap.val().sells;
+						var numBuys = 0;
+						var numSells = 0;
+						if (buys) {
+							numBuys = Object.keys(buys).length;
+						}
+						if (sells) {
+							numSells = Object.keys(sells).length;
+						}
+						position = numBuys - numSells;
+					}
+					activeTrades = snapshot.val();
+					var context = {activeTrades: activeTrades, roomID: roomID, position: position, diceRolls: diceRolls, sum: sum, numRounds: numRounds, roundNum: Object.keys(diceRolls).length};
+					var renderedTemplate = template(context);
+					$("#trade-container").html(renderedTemplate);
+					setupListeners();
+					// transform roomID into room name
+					ref.child("rooms").child(roomID).once("value", function (roomSnapshot) {
+						$("#roomName").html(roomSnapshot.val().roomName);
+					});
+				});
+			});
+
+			setInterval(function () {
+				$("#time").html(parseInt($("#time").html()) - 1);
+			}, 1000);
 		});
 	}
 }
