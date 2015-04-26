@@ -7,6 +7,7 @@ var ref = new Firebase("https://market-making.firebaseio.com/");
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
+	console.log('jkasdf');
 	res.render('index', { title: 'Market Making'});
 });
 
@@ -61,27 +62,24 @@ router.post('/rooms', function (req, res, next) {
 });
 
 router.get('/rooms/:roomid', function (req, res, next) {
+
 	ref.child("rooms").child(req.params.roomid).once("value", function (snapshot){
+
+	console.log("Rendering game. Room ID: " + req.params.roomid);
+	var roomID = req.params.roomid;
+	ref.child("rooms").child(roomID).once("value", function (snapshot) {
+
 		if (snapshot.exists()) {
-			ref.child("rooms").child(req.params.roomid).child("startTime").once("value", function (startSnap) {
-				if (startSnap.exists()) {
-					res.render('game', {title: 'Game', roomid: req.params.roomid});
-				} else {
-					res.render('game', {title: 'Waiting Room', roomid: req.params.roomid}); // TODO: eventually change to 'waiting'
-				}
-			});
+			console.log(snapshot.exists());
+			res.render('waiting', {title: 'Game', roomid: roomID});
 		} else {
 			res.render("404");
 		}	
 	});
-
-	res.render('game', {title: 'Game', roomid: req.params.roomid});
-
 });
 
 router.get('/contact', function (req, res, next){
 	res.render('contact', {title: 'Contact'});
-
 });
 router.get('/games',function (req, res, next){
 	res.render('games',{title:'Games'});
