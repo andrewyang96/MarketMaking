@@ -254,17 +254,25 @@ events.on("value", function (snapshot) {
           console.log("Writing trade history for room " + val.roomID);
           var outFile = "data/" + val.roomID + ".json";
           if (!data) data = {};
-          fs.writeFile(outFile, JSON.stringify(data, null, 4), function (err) {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log("JSON written to " + outFile);
+          rooms.child(roomID).child("diceRolls").once("value", function (diceSnap) {
+            var diceData = diceSnap.val();
+            var sum = 0;
+            for (var key in diceData) {
+              sum += parseInt(diceData[key]);
             }
-            // then get rid of everything
-            rooms.child(val.roomID).remove(function () {
-              members.child(val.roomID).remove(function () {
-                activeTrades.child(val.roomID).remove(function () {
-                  tradeHistory.child(val.roomID).remove();
+            var outData = {finalPrice: sum, trades: data};
+            fs.writeFile(outFile, JSON.stringify(outData, null, 4), function (err) {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log("JSON written to " + outFile);
+              }
+              // then get rid of everything
+              rooms.child(val.roomID).remove(function () {
+                members.child(val.roomID).remove(function () {
+                  activeTrades.child(val.roomID).remove(function () {
+                    tradeHistory.child(val.roomID).remove();
+                  });
                 });
               });
             });

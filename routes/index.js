@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+var fs = require('fs');
 var shortid = require('shortid');
 var Firebase = require('firebase');
 var ref = new Firebase("https://market-making.firebaseio.com/");
@@ -90,6 +91,37 @@ router.get('/rooms/:roomid', function (req, res, next) {
 		} else {
 			res.render("404");
 		}	
+	});
+});
+
+router.get('/results/:resultid', function (req, res, next) {
+	console.log("Fetching results for " + req.params.resultid);
+	var resultID = req.params.resultid;
+	var filename = "./data/" + resultID + ".json";
+	console.log("Should be located at " + filename);
+	fs.readFile(filename, function (err, data) {
+		if (err) throw err;
+		var j = JSON.parse(data);
+		var finalPrice = j.finalPrice;
+		var ret = {};
+		for (var user in j.trades) {
+			var position = Object.keys(j.trades.buys).length - Object.keys(j.trades.sells);
+			var cash = 0;
+			for (var transaction in j.trades.buys) {
+				cash -= parseInt(j.trades.buys[transaction].price);
+			}
+			for (var transaction in j.trades.sells) {
+				cash += parseInt(j.trades.sells[transaction].price);
+			}
+			// penalties applied for not having zero position
+			if (position > 0) {
+				cash += (position * (finalPrice - 2));
+			} else if (position < 0) {
+				cash += (position * (finalPrice + 2));
+			}
+			ret[user] = cash;
+		}
+		res.render('results', {title: "Results", data: ret});
 	});
 });
 
