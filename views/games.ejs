@@ -4,7 +4,8 @@
 		<div id="trade-container">
 
 		<script id="trade-area" type="type/x-handlebars-template">
-		<h2 id="roomName">{{roomID}}</h2>
+		<h2 id="roomName" class="span6 pull-left">{{roomID}}</h2>
+		<div id="timer" class="span6 pull-right"><span id="time">10</span></div>
 		<br><br><br><br><br>
 
 
@@ -22,7 +23,13 @@
 		  </div>
 	  	  <button type="button" class="btn btn-primary" id="trade">Make Offer</button>
 		</form>
-	
+		
+		<ul>
+		{{#each activeTrades}}
+			<li>{{initiator}}: {{buyPrice}} - {{sellPrice}} (ID: {{@key}})</li>
+		{{/each}}
+		</ul>
+
 		<div class="row">
 		  	<div class="col-md-8 col-md-push-4 frow">Buy</div>
 		  	<div class="col-md-4 col-md-pull-0 frow">Sell</div>
@@ -40,20 +47,9 @@
 		  	</button>
 		</div>
 
-		<!-- Timer -->
-		<!--<div id="contain">
-	  		<div class="show-grip">
-	  			<div id="timer"><span id="time"></span> </div><br><br><br>
-			</div>
-		</div>	
-		<br><br>-->
-
-			
-		
-
 		</script>
 
-	</div>
+		</div>
 	</div>
 	
 
